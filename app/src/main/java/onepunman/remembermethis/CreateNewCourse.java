@@ -1,5 +1,7 @@
 package onepunman.remembermethis;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,8 +17,9 @@ public class CreateNewCourse extends AppCompatActivity {
         final Button create_button = findViewById(R.id.btn_create);
         create_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // To Do
+                ShowAlert();
             }
+
         });
 
         final Button cancel_button = findViewById(R.id.btn_cancel);
@@ -25,5 +28,21 @@ public class CreateNewCourse extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void ShowAlert() {
+        AlertDialog.Builder msg = new AlertDialog.Builder(this);
+        msg.setMessage("Hello World!")
+                .setPositiveButton("Ok!", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setTitle("Testing Title+")
+                .setIcon(R.drawable.brain)
+                .create();
+        msg.show();
+
     }
 }
