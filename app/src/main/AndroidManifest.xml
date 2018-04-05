@@ -19,7 +19,8 @@
         <activity
             android:name=".SelectCourse"
             android:label="@string/title_activity_select_course"
-            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity android:name=".CreateNewCourse"></activity>
     </application>
 
 </manifest>

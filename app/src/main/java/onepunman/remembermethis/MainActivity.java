@@ -35,6 +35,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        final Button new_course_button = findViewById(R.id.btn_create_new_course);
+        new_course_button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent i=new Intent(MainActivity.this, CreateNewCourse.class);
+                startActivity(i);
+            }
+        });
+
+
         Log.i(TAG, "onCreate");
     }
 

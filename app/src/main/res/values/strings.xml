@@ -6,4 +6,7 @@
     <string name="back">Back</string>
     <string name="exit">Exit</string>
     <string name="create_new_course">Create New Course</string>
+    <string name="cancel">Cancel</string>
+    <string name="create">Create</string>
+    <string name="view_courses">View Courses</string>
 </resources>
