@@ -57,8 +57,8 @@ public class Course {
         return;
     }
 
-    public void save(){
-        return;
+    public boolean save(){
+        return true;
     }
 
     public void reset(){

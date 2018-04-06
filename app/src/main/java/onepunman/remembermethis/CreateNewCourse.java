@@ -15,6 +15,8 @@ import java.io.File;
 public class CreateNewCourse extends AppCompatActivity {
 
     private EditText course_name_text;
+    private EditText course_description_text;
+
     private String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/RememberMeThis";
 
     @Override
@@ -23,22 +25,28 @@ public class CreateNewCourse extends AppCompatActivity {
         setContentView(R.layout.activity_create_new_course);
 
         course_name_text = findViewById(R.id.txt_course_name);
+        course_description_text = findViewById(R.id.txt_course_description);
 
         final Button create_button = findViewById(R.id.btn_create);
         create_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //ShowAlert("test");
                 //Toast.makeText(CreateNewCourse.this,"Error save file!!!",Toast.LENGTH_SHORT).show();
-                FileIO.writeToFile("Testing123", CreateNewCourse.this);
-                ShowAlert(FileIO.readFromFile(CreateNewCourse.this));
-                ShowAlert(getFilesDir().toString());
+                //FileIO.writeToFile("Testing123", CreateNewCourse.this);
+                //ShowAlert(FileIO.readFromFile(CreateNewCourse.this));
+                //ShowAlert(getFilesDir().toString());
 
+                String courseName = course_name_text.getText().toString();
+                String courseDescription = course_description_text.getText().toString();
 
+                ShowAlert(courseName);
+                ShowAlert(courseDescription);
 
-
-
-
-
+                Course newCourse = new Course();
+                newCourse.createNew(courseName, courseDescription, null);
+                if (newCourse.save()){
+                    Toast.makeText(CreateNewCourse.this,"Course Saved",Toast.LENGTH_SHORT).show();
+                }
             }
 
         });
