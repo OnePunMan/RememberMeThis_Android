@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="onepunman.remembermethis">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -22,7 +22,8 @@
             android:name=".SelectCourse"
             android:label="@string/title_activity_select_course"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".CreateNewCourse"></activity>
+        <activity android:name=".CreateNewCourse" />
+        <activity android:name=".CourseActivity"></activity>
     </application>
 
 </manifest>

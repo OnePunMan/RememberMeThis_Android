@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.File;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "Debug";
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         final Button view_course_button = findViewById(R.id.btn_view_courses);
         view_course_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent i=new Intent(MainActivity.this, SelectCourse.class);
+                Intent i = new Intent(MainActivity.this, SelectCourse.class);
                 startActivity(i);
             }
         });
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         final Button new_course_button = findViewById(R.id.btn_create_new_course);
         new_course_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent i=new Intent(MainActivity.this, CreateNewCourse.class);
+                Intent i = new Intent(MainActivity.this, CreateNewCourse.class);
                 startActivity(i);
             }
         });
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
         {
             Toast.makeText(MainActivity.this, "Permission Already Granted", Toast.LENGTH_SHORT).show();
+            FileIO.initDirectory();
         }
         else {
             requestStoragePermission();
@@ -87,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
         }
+        FileIO.initDirectory();
     }
 
     @Override

@@ -15,15 +15,29 @@ import java.io.OutputStreamWriter;
 
 
 public class FileIO {
-    final static String fileName = "testCourse.course";
-    final static String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+    final static String appDirectory = File.separator + "RememberMeThis";
+    final static String courseDirectory =  File.separator + "Courses";
+    final static String basePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+    final static String COURSES_PATH = basePath + appDirectory  + courseDirectory;
+    final static String COURSE_EXTENSION = ".course";
     final static String TAG = FileIO.class.getName();
 
-    public static File[] getFilesInSubDir(String subDir) {
+    public static void initDirectory () {
+        File rootDir = new File(basePath + appDirectory);
+        if (!rootDir.exists()) {
+            rootDir.mkdir();
+        }
+
+        File coursesDir = new File(COURSES_PATH);
+        if (!coursesDir.exists()) {
+            coursesDir.mkdir();
+        }
+    }
+
+    public static File [] getFilesInDir(String dir) {
         try{
-            String newPath = path.toString() + File.separator + subDir;
-            Log.d("FileIO", "Path: " + newPath);
-            File directory = new File(newPath);
+            Log.d("FileIO", "Path: " + dir);
+            File directory = new File(dir);
             File[] files = directory.listFiles();
             Log.d("FileIO", "Size: "+ files.length);
             for (int i = 0; i < files.length; i++)
@@ -39,9 +53,18 @@ public class FileIO {
         }
     }
 
+
+    public static File[] getFilesInSubDir(String subDir) {
+        return getFilesInDir(basePath.toString() + File.separator + subDir);
+    }
+
+    public static File [] getCourseFiles() {
+        return getFilesInDir(COURSES_PATH);
+    }
+
     public static void writeToFile(String fileName, String data, Context context) {
         // The name of the file to open.
-        String newPath = path + "/RememberMeThis/Courses/" + fileName + ".course";
+        String newPath = COURSES_PATH + File.separator + fileName + COURSE_EXTENSION;
 
         try {
             // Assume default encoding.
@@ -76,7 +99,7 @@ public class FileIO {
         String ret = "";
 
         try {
-            InputStream inputStream = context.openFileInput(path + "test.txt");
+            InputStream inputStream = context.openFileInput(basePath + "test.txt");
 
             if (inputStream != null) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
