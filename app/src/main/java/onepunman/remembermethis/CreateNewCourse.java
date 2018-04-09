@@ -31,15 +31,15 @@ public class CreateNewCourse extends AppCompatActivity {
         final Button create_button = findViewById(R.id.btn_create);
         create_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //ShowAlert("test");
-                //Toast.makeText(CreateNewCourse.this,"Error save file!!!",Toast.LENGTH_SHORT).show();
-                Log.e("FileIO", "YO");
-                FileIO.writeToFile("Testing123", CreateNewCourse.this);
-                //ShowAlert(FileIO.readFromFile(CreateNewCourse.this));
-                //ShowAlert(getFilesDir().toString());
-                /*
                 String courseName = course_name_text.getText().toString();
                 String courseDescription = course_description_text.getText().toString();
+
+                FileIO.writeToFile(courseName + "\n" + courseDescription, CreateNewCourse.this);
+                //ShowAlert(FileIO.readFromFile(CreateNewCourse.this));
+                //ShowAlert(getFilesDir().toString());
+
+                /*
+
 
                 ShowAlert(courseName);
                 ShowAlert(courseDescription);

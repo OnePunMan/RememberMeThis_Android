@@ -10,7 +10,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class SelectCourse extends AppCompatActivity {
 
@@ -53,6 +57,39 @@ public class SelectCourse extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         Toast.makeText(SelectCourse.this, fileName, Toast.LENGTH_SHORT).show();
+
+                        // The name of the file to open.
+                        String filePath = FileIO.path + File.separator + "RememberMeThis/Courses/" + fileName;
+
+                        // This will reference one line at a time
+                        String line = null;
+
+                        try {
+                            // FileReader reads text files in the default encoding.
+                            FileReader fileReader =
+                                    new FileReader(filePath);
+
+                            // Always wrap FileReader in BufferedReader.
+                            BufferedReader bufferedReader =
+                                    new BufferedReader(fileReader);
+
+                            while((line = bufferedReader.readLine()) != null) {
+                                Log.e("FileIO", line);
+                            }
+
+                            // Always close files.
+                            bufferedReader.close();
+                        }
+                        catch(FileNotFoundException ex) {
+                            Log.e("FileIO",
+                                    "Unable to open file '" +
+                                            fileName + "'");
+                        }
+                        catch(IOException ex) {
+                            Log.e("FileIO",
+                                    "Error reading file '"
+                                            + fileName + "'");
+                        }
                     }
                 });
             }

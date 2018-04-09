@@ -3,9 +3,11 @@ import android.os.Environment;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -13,7 +15,7 @@ import java.io.OutputStreamWriter;
 
 
 public class FileIO {
-    final static String fileName = "data.txt";
+    final static String fileName = "testCourse.course";
     final static String path = Environment.getExternalStorageDirectory().getAbsolutePath();
     final static String TAG = FileIO.class.getName();
 
@@ -38,25 +40,35 @@ public class FileIO {
     }
 
     public static void writeToFile(String data, Context context) {
-       /*
+        // The name of the file to open.
+        String newPath = path + "/RememberMeThis/Courses/" + fileName;
+
         try {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(fileName, Context.MODE_PRIVATE));
-            outputStreamWriter.write(data);
-            outputStreamWriter.close();
-            Log.e("FileIO", "File write success to " + path);
-        } catch (IOException e) {
-            Log.e("FileIO", "File write failed: " + e.toString());
+            // Assume default encoding.
+            FileWriter fileWriter =
+                    new FileWriter(newPath);
+
+            // Always wrap FileWriter in BufferedWriter.
+            BufferedWriter bufferedWriter =
+                    new BufferedWriter(fileWriter);
+
+            // write() does not automatically append new line
+            bufferedWriter.write(data + "\n");
+
+            bufferedWriter.write("Hello there,");
+            bufferedWriter.write(" here is some text.");
+            bufferedWriter.newLine();
+            bufferedWriter.write("We are writing");
+            bufferedWriter.write(" the text to the file.");
+
+            bufferedWriter.close();
         }
-        */
-
-       /*
-       File f = new File(path + File.separator + fileName);
-       f.mkdir();
-       Log.e("FileIO", f.getAbsolutePath().toString());
-       */
-
-
-
+        catch(IOException ex) {
+           Log.e("FileIO", "Error writing to file '" + fileName + "'");
+        }
+        catch (Exception e) {
+                Log.e("FileIO", "Other Error: " + e.getMessage());
+        }
     }
 
     public static String readFromFile(Context context) {
