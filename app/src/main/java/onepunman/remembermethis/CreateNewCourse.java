@@ -34,7 +34,7 @@ public class CreateNewCourse extends AppCompatActivity {
                 String courseName = course_name_text.getText().toString();
                 String courseDescription = course_description_text.getText().toString();
 
-                FileIO.writeToFile(courseName + "\n" + courseDescription, CreateNewCourse.this);
+                FileIO.writeToFile(courseName, courseName + "\n" + courseDescription, CreateNewCourse.this);
                 //ShowAlert(FileIO.readFromFile(CreateNewCourse.this));
                 //ShowAlert(getFilesDir().toString());
 

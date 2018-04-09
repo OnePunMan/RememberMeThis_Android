@@ -50,11 +50,12 @@ public class Course {
     }
 
     public void addDefinition(String name, String description, int level){
-        return;
+        Definition newDef = new Definition(name, description, level);
+        _definitions.add(newDef);
     }
 
     public void addDefinition(Definition newDef){
-        return;
+        _definitions.add(newDef);
     }
 
     public boolean save(){

@@ -39,9 +39,9 @@ public class FileIO {
         }
     }
 
-    public static void writeToFile(String data, Context context) {
+    public static void writeToFile(String fileName, String data, Context context) {
         // The name of the file to open.
-        String newPath = path + "/RememberMeThis/Courses/" + fileName;
+        String newPath = path + "/RememberMeThis/Courses/" + fileName + ".course";
 
         try {
             // Assume default encoding.
