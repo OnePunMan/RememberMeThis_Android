@@ -14,9 +14,10 @@ public class CourseActivity extends AppCompatActivity {
     final static String TAG = CourseActivity.class.getName();
     LinearLayout ll;
     static TextView lblCourseTitle;
-
+    static TextView lblDescription;
 
     private static File _currentCourseFile;
+    private static Course _currentCourse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +26,7 @@ public class CourseActivity extends AppCompatActivity {
 
         ll = findViewById(R.id.courseContent);
         lblCourseTitle = findViewById(R.id.courseTitle);
+        lblDescription = findViewById(R.id.courseDescription);
 
         final Button backButton = findViewById(R.id.btn_back);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -40,5 +42,11 @@ public class CourseActivity extends AppCompatActivity {
     public static void Init(File courseFile) {
         _currentCourseFile = courseFile;
         lblCourseTitle.setText(courseFile.getName());
+        lblDescription.setText(courseFile.getAbsolutePath());
+
+        _currentCourse = new Course();
+        _currentCourse.loadFromFile(courseFile);
+
+
     }
 }

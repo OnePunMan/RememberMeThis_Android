@@ -1,19 +1,26 @@
 package onepunman.remembermethis;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.ListIterator;
 
 public class Course {
-    public static String DELIMITER = "|";
+    final String TAG = "Debug";
+    public static String DELIMITER = "\\|";
 
     private String _id;
     private String _name;
     private String _description;
-    private String _filePath;
+    private File _courseFile;
     private ArrayList<Definition> _definitions;
     private ArrayList<Definition> _difficultDefinitions;
 
@@ -21,7 +28,7 @@ public class Course {
         this._id = null;
         this._name = null;
         this._description = null;
-        this._filePath = null;
+        this._courseFile = null;
         this._definitions = new ArrayList<Definition>();
         this._difficultDefinitions = new ArrayList<Definition>();
     }
@@ -29,13 +36,77 @@ public class Course {
     public void createNew(String name, String description, String filePath){
         _name = name;
         _description = description;
-        _filePath = filePath;
     }
 
     public void loadFromFile(String filePath){
         return;
     }
 
+    public void loadFromFile(File courseFile){
+        _courseFile = courseFile;
+        FileInputStream fStream = null;
+        try {
+             fStream = new FileInputStream(_courseFile);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fStream));
+
+            int lineCount = 1;
+            String line = "Empty";
+            while (line != null) {
+                Log.d(TAG, line);
+                line = reader.readLine();
+
+                if (line == null) break;
+                if (line.length() < 2) continue;
+
+                if (lineCount == 1) {
+                    _name = line;
+                }
+                else if (lineCount == 2) {
+                    _description = line;
+                }
+                else {
+                    String [] sections = line.split(DELIMITER);
+                    if (sections.length == Definition.NUM_FIELDS) {
+                        _definitions.add(
+                                new Definition(
+                                        sections[Definition.Section.NAME.ordinal()],
+                                        sections[Definition.Section.DESCRIPTION.ordinal()],
+                                        Integer.parseInt(sections[Definition.Section.LEVEL.ordinal()]),
+                                        sections[Definition.Section.TIME_CREATED.ordinal()],
+                                        sections[Definition.Section.LAST_TESTED.ordinal()],
+                                        Integer.parseInt(sections[Definition.Section.TIMES_TESTED.ordinal()]),
+                                        Integer.parseInt(sections[Definition.Section.TIMES_CORRECT.ordinal()]),
+                                        Integer.parseInt(sections[Definition.Section.STREAK.ordinal()]),
+                                        Integer.parseInt(sections[Definition.Section.STAGE.ordinal()]),
+                                        Boolean.parseBoolean(sections[Definition.Section.IGNORE.ordinal()]),
+                                        Boolean.parseBoolean(sections[Definition.Section.DIFFICULT.ordinal()]))
+                        );
+                    }
+                    else {
+                        Log.e(TAG, "Bad Course File! " + sections.length);
+                        for (int i = 0; i < sections.length; i++) {
+                            Log.e(TAG, i + sections[i]);
+                        }
+                        break;
+                    }
+                }
+                lineCount += 1;
+            }
+
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage());
+        } catch (Exception e) {
+            Log.e(TAG, "Other Error: ", e);
+        }
+        finally{
+            try {
+                if (fStream != null)
+                    fStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     public ArrayList<Definition> getAll(int level){
         return null;
