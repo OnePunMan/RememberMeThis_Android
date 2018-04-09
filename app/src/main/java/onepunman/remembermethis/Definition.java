@@ -51,15 +51,20 @@ public class Definition {
     }
 
     public boolean isReviewtime(){
-        return true;
+        if (_timeCreated == null) return false;
+
+        return nextReviewtime() > 0;
     }
 
     public int nextReviewtime(){
+        double previousTime;
+        double now;
+
         return 0;
     }
 
     public double correctPercent(){
-        return 0.0;
+        return 0;
     }
 
     public void setBeginning(){

@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,7 +18,7 @@ public class CreateNewCourse extends AppCompatActivity {
     private EditText course_name_text;
     private EditText course_description_text;
 
-    private String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/RememberMeThis";
+    //private String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/RememberMeThis";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +33,11 @@ public class CreateNewCourse extends AppCompatActivity {
             public void onClick(View v) {
                 //ShowAlert("test");
                 //Toast.makeText(CreateNewCourse.this,"Error save file!!!",Toast.LENGTH_SHORT).show();
-                //FileIO.writeToFile("Testing123", CreateNewCourse.this);
+                Log.e("FileIO", "YO");
+                FileIO.writeToFile("Testing123", CreateNewCourse.this);
                 //ShowAlert(FileIO.readFromFile(CreateNewCourse.this));
                 //ShowAlert(getFilesDir().toString());
-
+                /*
                 String courseName = course_name_text.getText().toString();
                 String courseDescription = course_description_text.getText().toString();
 
@@ -47,6 +49,8 @@ public class CreateNewCourse extends AppCompatActivity {
                 if (newCourse.save()){
                     Toast.makeText(CreateNewCourse.this,"Course Saved",Toast.LENGTH_SHORT).show();
                 }
+
+                */
             }
 
         });
@@ -70,7 +74,7 @@ public class CreateNewCourse extends AppCompatActivity {
                         dialog.dismiss();
                     }
                 })
-                .setTitle(path)
+                .setTitle("TEMP" ) //path)
                 .setIcon(R.drawable.brain)
                 .create();
         msg.show();
