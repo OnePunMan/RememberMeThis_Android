@@ -41,9 +41,12 @@ public class CreateNewCourse extends AppCompatActivity {
 
                 Course newCourse = new Course();
                 if (newCourse.createNew(courseName, courseDescription)) {
-                    Toast.makeText(CreateNewCourse.this,"Course Created",Toast.LENGTH_SHORT).show();
-                    newCourse.save();
-                    finish();
+                    if (newCourse.save()) {
+                        Toast.makeText(CreateNewCourse.this,"Course Created",Toast.LENGTH_SHORT).show();
+                        showAlert("Course Created", "\"" + courseName + "\"" + " has been created" );
+                    } else {
+                        Toast.makeText(CreateNewCourse.this,"Failed to save course",Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else {
                     Toast.makeText(CreateNewCourse.this,"Course name cannot be empty",Toast.LENGTH_SHORT).show();
@@ -61,16 +64,17 @@ public class CreateNewCourse extends AppCompatActivity {
 
     }
 
-    private void ShowAlert(String message) {
+    private void showAlert(String title, String message) {
         AlertDialog.Builder msg = new AlertDialog.Builder(this);
         msg.setMessage(message)
-                .setPositiveButton("Ok!", new DialogInterface.OnClickListener() {
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+                        finish();
                     }
                 })
-                .setTitle("TEMP" ) //path)
+                .setTitle(title)
                 .setIcon(R.drawable.brain)
                 .create();
         msg.show();

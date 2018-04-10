@@ -107,7 +107,7 @@ public class Course {
     }
 
     public ArrayList<Definition> getAll(int level){
-        return null;
+        return _definitions;
     }
 
     public ArrayList<Definition> getAll(){
@@ -136,10 +136,15 @@ public class Course {
     }
 
     public boolean save(){
+        if (_name == null || _name.trim().length() <= 0) {
+            Log.e(TAG, "Unable to save, course is in an invalid state.");
+            return false;
+        }
+
         if (_courseFile == null) {
             _courseFile = FileIO.writeToFile(_name, _name + "\n" + _description);
         } else {
-            //
+            // Write to file
         }
         return true;
     }

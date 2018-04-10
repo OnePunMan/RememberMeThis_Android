@@ -36,19 +36,19 @@ public class FileIO {
 
     public static File [] getFilesInDir(String dir) {
         try{
-            Log.d("FileIO", "Path: " + dir);
+            Log.d(TAG, "Path: " + dir);
             File directory = new File(dir);
             File[] files = directory.listFiles();
-            Log.d("FileIO", "Size: "+ files.length);
+            Log.d(TAG, "Size: "+ files.length);
             for (int i = 0; i < files.length; i++)
             {
-                Log.d("FileIO", "FileName:" + files[i].getName());
+                Log.d(TAG, "FileName:" + files[i].getName());
             }
             return files;
         }
         catch (Exception e)
         {
-            Log.e("FileIO", e.getMessage());
+            Log.e(TAG, e.getMessage());
             return null;
         }
     }
@@ -92,11 +92,11 @@ public class FileIO {
             return resFile;
         }
         catch(IOException e) {
-           Log.e("FileIO", "Error writing to file '" + fileName + "'");
+           Log.e(TAG, "Error writing to file '" + fileName + "'");
            return null;
         }
         catch (Exception e) {
-            Log.e("FileIO", "Other Error: " + e.getMessage());
+            Log.e(TAG, "Other Error: " + e.getMessage());
             return null;
         }
     }
@@ -122,9 +122,9 @@ public class FileIO {
                 ret = stringBuilder.toString();
             }
         } catch (FileNotFoundException e) {
-            Log.e("FileIO", "File not found: " + e.toString());
+            Log.e(TAG, "File not found: " + e.toString());
         } catch (IOException e) {
-            Log.e("FileIO", "Can not read file: " + e.toString());
+            Log.e(TAG, "Can not read file: " + e.toString());
         }
 
         return ret;

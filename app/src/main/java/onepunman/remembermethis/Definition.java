@@ -89,6 +89,14 @@ public class Definition {
         this._difficult = difficult;
     }
 
+    public String getName () {
+        return _name;
+    }
+
+    public String getDescription () {
+        return _description;
+    }
+
 
     public static Date parseDate(String stringDate) {
         SimpleDateFormat format = new SimpleDateFormat(TIME_FORMAT);

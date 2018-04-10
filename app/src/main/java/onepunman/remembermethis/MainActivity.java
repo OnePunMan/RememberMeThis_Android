@@ -19,7 +19,7 @@ import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "Debug";
+    private static final String TAG = "Main";
     private int STORAGE_PERMISSION_CODE = 1;
 
     @Override

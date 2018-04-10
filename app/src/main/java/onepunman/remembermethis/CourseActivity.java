@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -37,7 +38,18 @@ public class CourseActivity extends AppCompatActivity {
 
         FileWrapper w = (FileWrapper) getIntent().getSerializableExtra("courseFile");
         Init(w.getFile());
-}
+
+        Button btn;
+        for (Definition def : _currentCourse.getAll()) {
+            btn = new Button(this);
+            btn.setText(def.getName() + ": " + def.getDescription());
+            btn.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            ll.addView(btn);
+
+        }
+
+
+    }
 
     public static void Init(File courseFile) {
         _currentCourse = new Course();
@@ -49,7 +61,5 @@ public class CourseActivity extends AppCompatActivity {
 
         _currentCourse = new Course();
         _currentCourse.loadFromFile(courseFile);
-
-
     }
 }
