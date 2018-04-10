@@ -90,6 +90,14 @@ public class SelectCourse extends AppCompatActivity {
                 });
             }
         }
+
+        // Debugging only
+        for (int i = 0; i < 0; i++) {
+            btn = new Button(this);
+            btn.setText("TEST");
+            btn.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            ll.addView(btn);
+        }
     }
 
 }

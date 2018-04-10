@@ -34,25 +34,21 @@ public class CreateNewCourse extends AppCompatActivity {
                 String courseName = course_name_text.getText().toString();
                 String courseDescription = course_description_text.getText().toString();
 
-                FileIO.writeToFile(courseName, courseName + "\n" + courseDescription, CreateNewCourse.this);
                 //ShowAlert(FileIO.readFromFile(CreateNewCourse.this));
                 //ShowAlert(getFilesDir().toString());
-
-                /*
-
-
-                ShowAlert(courseName);
-                ShowAlert(courseDescription);
+                //ShowAlert(courseName);
+                //ShowAlert(courseDescription);
 
                 Course newCourse = new Course();
-                newCourse.createNew(courseName, courseDescription, null);
-                if (newCourse.save()){
-                    Toast.makeText(CreateNewCourse.this,"Course Saved",Toast.LENGTH_SHORT).show();
+                if (newCourse.createNew(courseName, courseDescription)) {
+                    Toast.makeText(CreateNewCourse.this,"Course Created",Toast.LENGTH_SHORT).show();
+                    newCourse.save();
+                    finish();
                 }
-
-                */
+                else {
+                    Toast.makeText(CreateNewCourse.this,"Course name cannot be empty",Toast.LENGTH_SHORT).show();
+                }
             }
-
         });
 
         final Button cancel_button = findViewById(R.id.btn_cancel);

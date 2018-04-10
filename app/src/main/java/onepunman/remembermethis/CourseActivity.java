@@ -40,9 +40,12 @@ public class CourseActivity extends AppCompatActivity {
 }
 
     public static void Init(File courseFile) {
+        _currentCourse = new Course();
         _currentCourseFile = courseFile;
-        lblCourseTitle.setText(courseFile.getName());
-        lblDescription.setText(courseFile.getAbsolutePath());
+        _currentCourse.loadFromFile(courseFile);
+
+        lblCourseTitle.setText(_currentCourse.getName());
+        lblDescription.setText(_currentCourse.getDescription());
 
         _currentCourse = new Course();
         _currentCourse.loadFromFile(courseFile);

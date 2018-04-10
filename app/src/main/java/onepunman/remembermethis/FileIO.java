@@ -62,35 +62,42 @@ public class FileIO {
         return getFilesInDir(COURSES_PATH);
     }
 
-    public static void writeToFile(String fileName, String data, Context context) {
+    public static File writeToFile(String fileName, String data) {
         // The name of the file to open.
         String newPath = COURSES_PATH + File.separator + fileName + COURSE_EXTENSION;
+        File resFile;
 
         try {
             // Assume default encoding.
-            FileWriter fileWriter =
-                    new FileWriter(newPath);
+            resFile = new File(newPath);
+            FileWriter fileWriter = new FileWriter(resFile);
 
             // Always wrap FileWriter in BufferedWriter.
-            BufferedWriter bufferedWriter =
-                    new BufferedWriter(fileWriter);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
             // write() does not automatically append new line
+            if (data != null) {
+                bufferedWriter.write(data);
+            }
+            /*
             bufferedWriter.write(data + "\n");
-
             bufferedWriter.write("Hello there,");
             bufferedWriter.write(" here is some text.");
             bufferedWriter.newLine();
             bufferedWriter.write("We are writing");
             bufferedWriter.write(" the text to the file.");
+            */
 
             bufferedWriter.close();
+            return resFile;
         }
-        catch(IOException ex) {
+        catch(IOException e) {
            Log.e("FileIO", "Error writing to file '" + fileName + "'");
+           return null;
         }
         catch (Exception e) {
-                Log.e("FileIO", "Other Error: " + e.getMessage());
+            Log.e("FileIO", "Other Error: " + e.getMessage());
+            return null;
         }
     }
 

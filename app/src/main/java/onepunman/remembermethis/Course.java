@@ -1,6 +1,5 @@
 package onepunman.remembermethis;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -9,13 +8,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.ListIterator;
-
 public class Course {
     final String TAG = "Debug";
     public static String DELIMITER = "\\|";
+    public static String EMPTY_PLACEHOLDER = "<No Description>";
 
     private String _id;
     private String _name;
@@ -33,9 +29,11 @@ public class Course {
         this._difficultDefinitions = new ArrayList<Definition>();
     }
 
-    public void createNew(String name, String description, String filePath){
+    public boolean createNew(String name, String description){
+        if (name == null || name.length() <= 2) return false;
         _name = name;
-        _description = description;
+        _description = (description == null|| description.length() <= 0) ? EMPTY_PLACEHOLDER : description;
+        return true;
     }
 
     public void loadFromFile(String filePath){
@@ -46,7 +44,7 @@ public class Course {
         _courseFile = courseFile;
         FileInputStream fStream = null;
         try {
-             fStream = new FileInputStream(_courseFile);
+            fStream = new FileInputStream(_courseFile);
             BufferedReader reader = new BufferedReader(new InputStreamReader(fStream));
 
             int lineCount = 1;
@@ -116,6 +114,14 @@ public class Course {
         return getAll(-1);
     }
 
+    public String getName() {
+        return _name;
+    }
+
+    public String getDescription() {
+        return _description;
+    }
+
     public String toString(){
         return null;
     }
@@ -130,6 +136,11 @@ public class Course {
     }
 
     public boolean save(){
+        if (_courseFile == null) {
+            _courseFile = FileIO.writeToFile(_name, _name + "\n" + _description);
+        } else {
+            //
+        }
         return true;
     }
 
