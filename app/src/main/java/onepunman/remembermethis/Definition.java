@@ -5,15 +5,17 @@ import android.util.Log;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Formatter;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 public class Definition {
-    final static String TAG = Definition.class.getName();
+    final static String TAG = "Debug";
     public static int[] TIME_INTERVALS = {2, 4, 4, 8, 12, 12, 24, 48, 48, 120, 840};
     public static String NOT_TESTED = "Not Tested Yet";
     public static String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(TIME_FORMAT);
     public static int SECONDS_PER_HOUR = 3600;
     public static int HOURS_PER_DAY = 24;
     public static double MIN_PERCENT = 0.75;
@@ -99,10 +101,9 @@ public class Definition {
 
 
     public static Date parseDate(String stringDate) {
-        SimpleDateFormat format = new SimpleDateFormat(TIME_FORMAT);
         try {
-            Date res = format.parse(stringDate);
-            Log.d(TAG, format.format(res));
+            Date res = DATE_FORMATTER.parse(stringDate);
+            Log.d(TAG, DATE_FORMATTER.format(res));
             return res;
         } catch (ParseException e) {
             Log.e(TAG, "Parsing Failed!");
@@ -110,17 +111,17 @@ public class Definition {
         }
     }
 
-    public String formatTime(){
-        return null;
+    public String formatNextReviewTime (){
+        return "Not Now";
     }
 
     public boolean isReviewtime(){
         if (_timeCreated == null) return false;
 
-        return nextReviewtime() <= 0;
+        return nextReviewTime() <= 0;
     }
 
-    public int nextReviewtime(){
+    public int nextReviewTime(){
         double previousTime;
         double now;
 
@@ -129,7 +130,7 @@ public class Definition {
 
     public double correctPercent(){
         if (_timesTested <= 0) return 0;
-        return _timesCorrect / _timesTested;
+        return (double) _timesCorrect / _timesTested;
     }
 
     public void setBeginning(){
@@ -160,5 +161,45 @@ public class Definition {
 
     public void previousStage(){
         _stage = max(min(_stage - 1, Definition.TIME_INTERVALS.length - 1), 0);
+    }
+
+    public String toString() {
+        Formatter formatter = new Formatter();
+        try {
+            String s = formatter.format(
+                    "Name: %1$2s\n" +
+                            "Description: %2$2s\n" +
+                            "Level: %3$2d\n" +
+                            "Created: %4$2s\n" +
+                            "Last Tested: %5$2s\n" +
+                            "Times Tested: %6$2d\n" +
+                            "Times Correct: %7$2d\n" +
+                            "Streak: %8$2d\n" +
+                            "SR Stage: %9$2d\n" +
+                            "Accuracy: %10$.1f%%\n" +
+                            "Next Review: %11$2s\n" +
+                            "Ignore?: %12$2s\n" +
+                            "Difficult: %13$2s\n",
+                    _name,
+                    _description,
+                    _level,
+                    DATE_FORMATTER.format(_timeCreated),
+                    DATE_FORMATTER.format(_lastTested),
+                    _timesTested,
+                    _timesCorrect,
+                    _streak,
+                    _stage,
+                    correctPercent() * 100,
+                    formatNextReviewTime(),
+                    (_ignore ? "Yes" : "No"),
+                    (_difficult ? "Yes" : "No")
+            ).toString();
+            Log.e(TAG, (s == null ? "NULL" : s));
+
+            return s;
+        } catch (Exception e) {
+            Log.e(TAG, "You screwed up: ", e);
+            return null;
+        }
     }
 }

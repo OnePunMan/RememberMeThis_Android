@@ -81,11 +81,11 @@ public class Course {
                         );
                     }
                     else {
-                        Log.e(TAG, "Bad Course File! " + sections.length);
+                        Log.e(TAG, "Bad line: " + lineCount);
                         for (int i = 0; i < sections.length; i++) {
                             Log.e(TAG, i + sections[i]);
                         }
-                        break;
+                        continue;
                     }
                 }
                 lineCount += 1;

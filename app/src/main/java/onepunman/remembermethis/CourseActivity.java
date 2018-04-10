@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.io.File;
 
 public class CourseActivity extends AppCompatActivity {
-    final static String TAG = CourseActivity.class.getName();
+    final static String TAG = "Debug";
     LinearLayout ll;
     static TextView lblCourseTitle;
     static TextView lblDescription;
@@ -36,15 +36,22 @@ public class CourseActivity extends AppCompatActivity {
             }
         });
 
-        FileWrapper w = (FileWrapper) getIntent().getSerializableExtra("courseFile");
-        Init(w.getFile());
+        ObjectWrapper w = (ObjectWrapper) getIntent().getSerializableExtra("courseFile");
+        Init((File)w.getObject());
 
         Button btn;
-        for (Definition def : _currentCourse.getAll()) {
+        for (final Definition def : _currentCourse.getAll()) {
             btn = new Button(this);
             btn.setText(def.getName() + ": " + def.getDescription());
             btn.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             ll.addView(btn);
+
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, def.toString());
+                }
+            });
 
         }
 
