@@ -30,7 +30,7 @@ public class Course {
     }
 
     public boolean createNew(String name, String description){
-        if (name == null || name.length() <= 2) return false;
+        if (name == null || name.trim().length() <= 0) return false;
         _name = name;
         _description = (description == null|| description.length() <= 0) ? EMPTY_PLACEHOLDER : description;
         return true;
