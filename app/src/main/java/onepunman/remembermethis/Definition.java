@@ -2,6 +2,7 @@ package onepunman.remembermethis;
 
 import android.util.Log;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -10,7 +11,7 @@ import java.util.Formatter;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-public class Definition {
+public class Definition implements Serializable {
     final static String TAG = "Debug";
     public static int[] TIME_INTERVALS = {2, 4, 4, 8, 12, 12, 24, 48, 48, 120, 840};
     public static String NOT_TESTED = "Not Tested Yet";
@@ -38,8 +39,8 @@ public class Definition {
     private String _name;
     private String _description;
     private int _level;
-    private Date _timeCreated; // Change to Date later
-    private Date _lastTested; // Change to Date later
+    private Date _timeCreated;
+    private Date _lastTested;
     private int _timesTested;
     private int _timesCorrect;
     private int _streak;

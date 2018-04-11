@@ -1,5 +1,6 @@
 package onepunman.remembermethis;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -49,13 +50,12 @@ public class CourseActivity extends AppCompatActivity {
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d(TAG, def.toString());
+                    Intent i = new Intent(CourseActivity.this, Popup.class);
+                    i.putExtra("definition", def);
+                    startActivity(i);
                 }
             });
-
         }
-
-
     }
 
     public static void Init(File courseFile) {

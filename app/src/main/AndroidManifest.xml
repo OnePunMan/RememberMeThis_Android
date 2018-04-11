@@ -24,7 +24,8 @@
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity android:name=".CreateNewCourse" />
         <activity android:name=".CourseActivity" />
-        <activity android:name=".Popup"></activity>
+        <activity android:name=".Popup"
+            android:theme="@style/AppTheme.CustomTheme"></activity>
     </application>
 
 </manifest>

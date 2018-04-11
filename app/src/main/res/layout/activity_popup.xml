@@ -7,12 +7,13 @@
     tools:context=".Popup">
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="353dp"
-        android:layout_height="534dp"
+        android:id="@+id/lblDefText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
+        android:layout_margin="20dp"
+        android:layout_marginLeft="210dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="210dp"
         android:text="TextView" />
 </RelativeLayout>

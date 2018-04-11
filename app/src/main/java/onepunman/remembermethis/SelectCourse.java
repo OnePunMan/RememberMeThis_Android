@@ -54,44 +54,20 @@ public class SelectCourse extends AppCompatActivity {
                         Intent j = new Intent(SelectCourse.this, CourseActivity.class);
                         j.putExtra("courseFile", new ObjectWrapper<File>(courseFiles[fileNum]));
                         startActivity(j);
-
-                        /*
-                        Toast.makeText(SelectCourse.this, fileName, Toast.LENGTH_SHORT).show();
-                        String filePath = FileIO.COURSES_PATH + fileName;
-                        String line;
-
-                        try {
-                            // FileReader reads text files in the default encoding.
-                            FileReader fileReader = new FileReader(filePath);
-
-                            // Always wrap FileReader in BufferedReader.
-                            BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-                            while((line = bufferedReader.readLine()) != null) {
-                                Log.e("FileIO", line);
-                            }
-
-                            bufferedReader.close();
-                        }
-                        catch(FileNotFoundException ex) {
-                            Log.e("FileIO", "Unable to open file '" +  fileName + "'");
-                        }
-                        catch(IOException ex) {
-                            Log.e("FileIO", "Error reading file '" + fileName + "'");
-                        }
-                        */
                     }
                 });
             }
         }
 
         // Debugging only
+        /*
         for (int i = 0; i < 0; i++) {
             btn = new Button(this);
             btn.setText("TEST");
             btn.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             ll.addView(btn);
         }
+        */
     }
 
 }
