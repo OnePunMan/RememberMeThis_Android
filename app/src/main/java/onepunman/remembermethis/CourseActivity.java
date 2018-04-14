@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.StringReader;
+import java.util.ArrayList;
 
 public class CourseActivity extends AppCompatActivity {
     final static String TAG = "Debug";
@@ -33,15 +35,18 @@ public class CourseActivity extends AppCompatActivity {
         final Button backButton = findViewById(R.id.btn_back);
         backButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                _currentCourse.save();
                 finish();
             }
         });
 
-        ObjectWrapper w = (ObjectWrapper) getIntent().getSerializableExtra("courseFile");
-        Init((File)w.getObject());
+        File f = (File) getIntent().getSerializableExtra("courseFile");
+        Init(f);
 
         Button btn;
-        for (final Definition def : _currentCourse.getAll()) {
+        ArrayList<Definition> definitions = _currentCourse.getAll(-1);
+
+        for (final Definition def : definitions) {
             btn = new Button(this);
             btn.setText(def.getName() + ": " + def.getDescription());
             btn.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -56,6 +61,7 @@ public class CourseActivity extends AppCompatActivity {
                 }
             });
         }
+
     }
 
     public static void Init(File courseFile) {
@@ -65,8 +71,5 @@ public class CourseActivity extends AppCompatActivity {
 
         lblCourseTitle.setText(_currentCourse.getName());
         lblDescription.setText(_currentCourse.getDescription());
-
-        _currentCourse = new Course();
-        _currentCourse.loadFromFile(courseFile);
     }
 }

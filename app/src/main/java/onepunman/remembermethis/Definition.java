@@ -49,11 +49,11 @@ public class Definition implements Serializable {
     private boolean _difficult;
 
     public Definition(String name , String description, int level, String timeCreated, String lastTested, int timesTested, int timesCorrect, int streak, int stage, boolean ignore, boolean difficult){
-        this._name = name;
-        this._description = description;
+        this._name = name != null ? name.trim() : null;
+        this._description = description != null ? description.trim() : null;
         this._level = level;
-        this._timeCreated = parseDate(timeCreated);
-        this._lastTested = parseDate(lastTested);
+        this._timeCreated = parseDate(timeCreated != null ? timeCreated.trim() : null);
+        this._lastTested = parseDate(lastTested != null ? lastTested.trim() : null);
         this._timesTested = timesTested;
         this._timesCorrect = timesCorrect;
         this._streak = streak;
@@ -79,8 +79,8 @@ public class Definition implements Serializable {
     }
 
     private Definition(String name , String description, int level, Date timeCreated, Date lastTested, int timesTested, int timesCorrect, int streak, int stage, boolean ignore, boolean difficult){
-        this._name = name;
-        this._description = description;
+        this._name = name != null ? name.trim() : null;
+        this._description = description != null ? description.trim() : null;
         this._level = level;
         this._timeCreated = timeCreated;
         this._lastTested = lastTested;
@@ -92,19 +92,22 @@ public class Definition implements Serializable {
         this._difficult = difficult;
     }
 
-    public String getName () {
-        return _name;
-    }
-
-    public String getDescription () {
-        return _description;
-    }
-
+    // Getters
+    public String getName () { return _name; }
+    public String getDescription () { return _description; }
+    public int getLevel() { return _level; }
+    public String getTimeCreated () { return DATE_FORMATTER.format(_timeCreated); }
+    public String getLastTested() { return DATE_FORMATTER.format(_lastTested); }
+    public int getTimesTested() { return _timesTested; }
+    public int getTimesCorrect() { return _timesCorrect; }
+    public int getStreak() { return _streak; }
+    public int getStage() { return _stage; }
+    public boolean isIgnore() { return _ignore; }
+    public boolean isDifficult() { return _difficult; }
 
     public static Date parseDate(String stringDate) {
         try {
             Date res = DATE_FORMATTER.parse(stringDate);
-            Log.d(TAG, DATE_FORMATTER.format(res));
             return res;
         } catch (ParseException e) {
             Log.e(TAG, "Parsing Failed!");
@@ -140,6 +143,7 @@ public class Definition implements Serializable {
 
     public void updateTime(){
         _lastTested = new Date();
+        Log.e(TAG, String.valueOf(this.hashCode()));
     }
 
     public void updateReviewed(boolean isCorrect, boolean advanceStage){
@@ -195,7 +199,6 @@ public class Definition implements Serializable {
                     (_ignore ? "Yes" : "No"),
                     (_difficult ? "Yes" : "No")
             ).toString();
-            Log.e(TAG, (s == null ? "NULL" : s));
 
             return s;
         } catch (Exception e) {

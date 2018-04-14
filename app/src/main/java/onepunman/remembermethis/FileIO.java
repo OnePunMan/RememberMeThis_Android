@@ -36,19 +36,21 @@ public class FileIO {
 
     public static File [] getFilesInDir(String dir) {
         try{
-            Log.d(TAG, "Path: " + dir);
+            //Log.d(TAG, "Path: " + dir);
             File directory = new File(dir);
             File[] files = directory.listFiles();
-            Log.d(TAG, "Size: "+ files.length);
+            //Log.d(TAG, "Size: "+ files.length);
+            /*
             for (int i = 0; i < files.length; i++)
             {
                 Log.d(TAG, "FileName:" + files[i].getName());
             }
+            */
             return files;
         }
         catch (Exception e)
         {
-            Log.e(TAG, e.getMessage());
+            Log.e(TAG, "Error reading directory", e);
             return null;
         }
     }

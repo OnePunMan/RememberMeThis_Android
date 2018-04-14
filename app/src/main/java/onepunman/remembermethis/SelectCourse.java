@@ -52,7 +52,7 @@ public class SelectCourse extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         Intent j = new Intent(SelectCourse.this, CourseActivity.class);
-                        j.putExtra("courseFile", new ObjectWrapper<File>(courseFiles[fileNum]));
+                        j.putExtra("courseFile", courseFiles[fileNum]);
                         startActivity(j);
                     }
                 });

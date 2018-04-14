@@ -3,14 +3,18 @@ package onepunman.remembermethis;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
+
 public class Course {
     final String TAG = "Debug";
-    public static String DELIMITER = "\\|";
+    public static String DELIMITER = "|";
     public static String EMPTY_PLACEHOLDER = "<No Description>";
 
     private String _id;
@@ -50,7 +54,6 @@ public class Course {
             int lineCount = 1;
             String line = "Empty";
             while (line != null) {
-                Log.d(TAG, line);
                 line = reader.readLine();
 
                 if (line == null) break;
@@ -63,7 +66,7 @@ public class Course {
                     _description = line;
                 }
                 else {
-                    String [] sections = line.split(DELIMITER);
+                    String [] sections = line.split(Pattern.quote(DELIMITER));
                     if (sections.length == Definition.NUM_FIELDS) {
                         _definitions.add(
                                 new Definition(
@@ -122,6 +125,10 @@ public class Course {
         return _description;
     }
 
+    public int defCount() {
+        return (_definitions == null ? 0 : _definitions.size());
+    }
+
     public String toString(){
         return null;
     }
@@ -135,18 +142,55 @@ public class Course {
         _definitions.add(newDef);
     }
 
-    public boolean save(){
+    public boolean save() {
         if (_name == null || _name.trim().length() <= 0) {
             Log.e(TAG, "Unable to save, course is in an invalid state.");
             return false;
         }
 
         if (_courseFile == null) {
-            _courseFile = FileIO.writeToFile(_name, _name + "\n" + _description);
-        } else {
-            // Write to file
+            // write to new file
+            try {
+                _courseFile = FileIO.writeToFile(_name, _name + "\n" + _description);
+                return true;
+            }
+            catch (Exception e) {
+                return false;
+            }
         }
-        return true;
+        else {
+            // Write to existing file
+            try {
+                FileWriter fileWriter = new FileWriter(_courseFile);
+                BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+                bufferedWriter.write(_name + "\n");
+                bufferedWriter.write(_description + "\n");
+                bufferedWriter.write("\n");
+
+                String line;
+                for (Definition def : _definitions) {
+                    line = def.getName() + DELIMITER +
+                            def.getDescription() + DELIMITER +
+                            def.getLevel() + DELIMITER +
+                            def.getTimeCreated() + DELIMITER +
+                            def.getLastTested() + DELIMITER +
+                            def.getTimesTested() + DELIMITER +
+                            def.getTimesCorrect() + DELIMITER +
+                            def.getStreak() + DELIMITER +
+                            def.getStage() + DELIMITER +
+                            def.isIgnore() + DELIMITER +
+                            def.isDifficult() + "\n";
+                    bufferedWriter.write(line);
+                }
+                bufferedWriter.close();
+                return true;
+            }
+            catch (Exception e) {
+                Log.e(TAG, "Saving Error: ", e);
+                return false;
+            }
+        }
     }
 
     public void reset(){

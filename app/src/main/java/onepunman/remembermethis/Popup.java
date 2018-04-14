@@ -17,6 +17,7 @@ public class Popup extends AppCompatActivity {
 
     Button btnUpdateTime;
     Button btnAddWin;
+    Button btnSave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,20 +27,7 @@ public class Popup extends AppCompatActivity {
         defText = findViewById(R.id.lblDefText);
         btnUpdateTime = findViewById(R.id.btnUpdateTime);
         btnAddWin = findViewById(R.id.btnAddWin);
-
-        btnUpdateTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //
-            }
-        });
-
-        btnAddWin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //
-            }
-        });
+        btnSave = findViewById(R.id.btnSave);
 
 
         DisplayMetrics dm = new DisplayMetrics();
@@ -51,8 +39,31 @@ public class Popup extends AppCompatActivity {
         getWindow().setLayout((int) (width * SCALE_WIDTH), (int) (height * SCALE_HEIGHT));
 
         _currentDef = (Definition) getIntent().getSerializableExtra("definition");
+
         if (_currentDef != null) {
             defText.setText(_currentDef.toString());
         }
+
+
+        btnUpdateTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _currentDef.updateTime();
+            }
+        });
+
+        btnAddWin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _currentDef.updateReviewed(true, false);
+            }
+        });
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 }
