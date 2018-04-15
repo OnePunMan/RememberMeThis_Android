@@ -98,6 +98,7 @@ public class Course {
                 }
                 lineCount += 1;
             }
+            reader.close();
 
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());

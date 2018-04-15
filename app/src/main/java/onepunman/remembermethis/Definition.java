@@ -31,8 +31,8 @@ public class Definition implements Serializable {
         LAST_TESTED,
         TIMES_TESTED,
         TIMES_CORRECT,
-        STAGE,
         STREAK,
+        STAGE,
         IGNORE,
         DIFFICULT
     }
