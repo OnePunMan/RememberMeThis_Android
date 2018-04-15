@@ -1,5 +1,6 @@
 package onepunman.remembermethis;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -55,14 +56,56 @@ public class CourseActivity extends AppCompatActivity {
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(CourseActivity.this, Popup.class);
-                    i.putExtra("definition", def);
-                    startActivity(i);
+                    final Dialog coursePopup = new Dialog(CourseActivity.this);
+
+                    coursePopup.setContentView(R.layout.activity_popup);
+
+                    final TextView defText = coursePopup.findViewById(R.id.lblDefText);
+                    Button btnUpdateTime = coursePopup.findViewById(R.id.btnUpdateTime);
+                    Button btnAddWin = coursePopup.findViewById(R.id.btnAddWin);
+                    Button btnSave = coursePopup.findViewById(R.id.btnSave);
+
+                    updateContent(defText, def.toString());
+
+                    btnUpdateTime.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            def.updateTime();
+                            updateContent(defText, def.toString());
+                        }
+                    });
+
+                    btnAddWin.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            def.updateReviewed(true, false);
+                            updateContent(defText, def.toString());
+                        }
+                    });
+
+                    btnSave.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            coursePopup.dismiss();
+                        }
+                    });
+
+                    coursePopup.show();
+
+
+                    // Intent i = new Intent(CourseActivity.this, Popup.class);
+                    // i.putExtra("definition", def);
+                    // startActivity(i);
                 }
             });
         }
 
     }
+
+    public void updateContent(TextView text, String content) {
+        text.setText(content);
+    }
+
 
     public static void Init(File courseFile) {
         _currentCourse = new Course();

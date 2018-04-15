@@ -10,17 +10,18 @@ import java.util.Formatter;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
+import static java.lang.Math.round;
 
 public class Definition implements Serializable {
     final static String TAG = "Debug";
-    public static int[] TIME_INTERVALS = {2, 4, 4, 8, 12, 12, 24, 48, 48, 120, 840};
-    public static String NOT_TESTED = "Not Tested Yet";
-    public static String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    public static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(TIME_FORMAT);
-    public static int SECONDS_PER_HOUR = 3600;
-    public static int HOURS_PER_DAY = 24;
-    public static double MIN_PERCENT = 0.75;
-    public static int NUM_FIELDS = Section.values().length;
+    public final static int[] TIME_INTERVALS = {2, 4, 4, 8, 12, 12, 24, 48, 48, 120, 840};
+    public final static String NOT_TESTED = "Not Tested Yet";
+    public final static String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public final static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(TIME_FORMAT);
+    public final static int SECONDS_PER_HOUR = 3600;
+    public final static int HOURS_PER_DAY = 24;
+    public final static double MIN_PERCENT = 0.75;
+    public final static int NUM_FIELDS = Section.values().length;
 
     public static enum Section {
         NAME,
@@ -116,20 +117,37 @@ public class Definition implements Serializable {
     }
 
     public String formatNextReviewTime (){
-        return "Not Now";
+        double hours = (double)nextReviewTime() / Definition.SECONDS_PER_HOUR;
+        Formatter formatter = new Formatter();
+
+        if (hours < Definition.HOURS_PER_DAY) {
+            long roundedHours = max(round(hours * 10.0) / 10, 0);
+            return formatter.format("%1$2d %2$2s", roundedHours, roundedHours == 1 ? "hour" : "hours").toString();
+        }
+
+        long days = 0;
+        while (hours - Definition.HOURS_PER_DAY >= 0) {
+            days += 1;
+            hours -= Definition.HOURS_PER_DAY;
+        }
+        long roundedHours = round(hours * 10.0) / 10;
+        return formatter.format("%1$2d %2$2s %3$2d %4$2s", days, (days == 1 ? "day" : "days"), roundedHours, (roundedHours == 1 ? "hour" : "hours")).toString();
     }
 
     public boolean isReviewtime(){
-        if (_timeCreated == null) return false;
-
+        if (_timeCreated == null){
+            Log.e(TAG, "Time Created should not be null! Check the save data.");
+            return false;
+        }
         return nextReviewTime() <= 0;
     }
 
-    public int nextReviewTime(){
-        double previousTime;
-        double now;
+    public long nextReviewTime(){
+        Date previousTime = _lastTested == null ? _timeCreated : _lastTested;
+        Date now = new Date();
 
-        return 0;
+        long timeDiff = (now.getTime() - previousTime.getTime()) / 1000;
+        return Definition.TIME_INTERVALS[_stage] * Definition.SECONDS_PER_HOUR - timeDiff;
     }
 
     public double correctPercent(){
@@ -143,11 +161,11 @@ public class Definition implements Serializable {
 
     public void updateTime(){
         _lastTested = new Date();
-        Log.e(TAG, String.valueOf(this.hashCode()));
     }
 
     public void updateReviewed(boolean isCorrect, boolean advanceStage){
         updateTime();
+        _timesTested += 1;
         if (isCorrect) {
             _timesCorrect += 1;
             if (advanceStage) {

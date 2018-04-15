@@ -14,8 +14,8 @@ import java.util.regex.Pattern;
 
 public class Course {
     final String TAG = "Debug";
-    public static String DELIMITER = "|";
-    public static String EMPTY_PLACEHOLDER = "<No Description>";
+    public final static String DELIMITER = "|";
+    public final static String EMPTY_PLACEHOLDER = "<No Description>";
 
     private String _id;
     private String _name;
@@ -24,7 +24,7 @@ public class Course {
     private ArrayList<Definition> _definitions;
     private ArrayList<Definition> _difficultDefinitions;
 
-    public Course(){
+    public Course() {
         this._id = null;
         this._name = null;
         this._description = null;
@@ -40,11 +40,11 @@ public class Course {
         return true;
     }
 
-    public void loadFromFile(String filePath){
+    public void loadFromFile(String filePath) {
         return;
     }
 
-    public void loadFromFile(File courseFile){
+    public void loadFromFile(File courseFile) {
         _courseFile = courseFile;
         FileInputStream fStream = null;
         try {
@@ -53,11 +53,12 @@ public class Course {
 
             int lineCount = 1;
             String line = "Empty";
+            String currentDelimiter = DELIMITER;
             while (line != null) {
                 line = reader.readLine();
 
                 if (line == null) break;
-                if (line.length() < 2) continue;
+                if (line.trim().length() < 1) continue;
 
                 if (lineCount == 1) {
                     _name = line;
@@ -65,8 +66,11 @@ public class Course {
                 else if (lineCount == 2) {
                     _description = line;
                 }
+                else if (lineCount == 3) {
+                    currentDelimiter = line.trim();
+                }
                 else {
-                    String [] sections = line.split(Pattern.quote(DELIMITER));
+                    String [] sections = line.split(Pattern.quote(currentDelimiter != null ? currentDelimiter : DELIMITER));
                     if (sections.length == Definition.NUM_FIELDS) {
                         _definitions.add(
                                 new Definition(
@@ -85,6 +89,7 @@ public class Course {
                     }
                     else {
                         Log.e(TAG, "Bad line: " + lineCount);
+                        Log.e(TAG, "Sections length: " + sections.length);
                         for (int i = 0; i < sections.length; i++) {
                             Log.e(TAG, i + sections[i]);
                         }
@@ -109,11 +114,11 @@ public class Course {
         }
     }
 
-    public ArrayList<Definition> getAll(int level){
+    public ArrayList<Definition> getAll(int level) {
         return _definitions;
     }
 
-    public ArrayList<Definition> getAll(){
+    public ArrayList<Definition> getAll() {
         return getAll(-1);
     }
 
@@ -129,16 +134,16 @@ public class Course {
         return (_definitions == null ? 0 : _definitions.size());
     }
 
-    public String toString(){
+    public String toString() {
         return null;
     }
 
-    public void addDefinition(String name, String description, int level){
+    public void addDefinition(String name, String description, int level) {
         Definition newDef = new Definition(name, description, level);
         _definitions.add(newDef);
     }
 
-    public void addDefinition(Definition newDef){
+    public void addDefinition(Definition newDef) {
         _definitions.add(newDef);
     }
 
@@ -151,7 +156,7 @@ public class Course {
         if (_courseFile == null) {
             // write to new file
             try {
-                _courseFile = FileIO.writeToFile(_name, _name + "\n" + _description);
+                _courseFile = FileIO.writeToFile(_name, _name + "\n" + _description + "\n" + DELIMITER);
                 return true;
             }
             catch (Exception e) {
@@ -166,6 +171,7 @@ public class Course {
 
                 bufferedWriter.write(_name + "\n");
                 bufferedWriter.write(_description + "\n");
+                bufferedWriter.write(DELIMITER + "\n");
                 bufferedWriter.write("\n");
 
                 String line;
@@ -193,7 +199,7 @@ public class Course {
         }
     }
 
-    public void reset(){
+    public void reset() {
         return;
     }
 

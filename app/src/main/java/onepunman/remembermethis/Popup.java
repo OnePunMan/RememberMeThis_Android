@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 public class Popup extends AppCompatActivity {
     final static String TAG = "Debug";
-    public static double SCALE_HEIGHT = 1;
-    public static double SCALE_WIDTH = 1;
+    public final static double SCALE_HEIGHT = 1;
+    public final double SCALE_WIDTH = 1;
     TextView defText;
     Definition _currentDef;
 
@@ -32,10 +32,8 @@ public class Popup extends AppCompatActivity {
 
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
-
         int width = dm.widthPixels;
         int height = dm.heightPixels;
-
         getWindow().setLayout((int) (width * SCALE_WIDTH), (int) (height * SCALE_HEIGHT));
 
         _currentDef = (Definition) getIntent().getSerializableExtra("definition");
