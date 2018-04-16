@@ -20,7 +20,7 @@ public class FileIO {
     final static String basePath = Environment.getExternalStorageDirectory().getAbsolutePath();
     final static String COURSES_PATH = basePath + appDirectory  + courseDirectory;
     final static String COURSE_EXTENSION = ".course";
-    final static String TAG = FileIO.class.getName();
+    private final static String TAG = "Debug"; //FileIO.class.getName();
 
     public static void initDirectory () {
         File rootDir = new File(basePath + appDirectory);
@@ -36,17 +36,7 @@ public class FileIO {
 
     public static File [] getFilesInDir(String dir) {
         try{
-            //Log.d(TAG, "Path: " + dir);
-            File directory = new File(dir);
-            File[] files = directory.listFiles();
-            //Log.d(TAG, "Size: "+ files.length);
-            /*
-            for (int i = 0; i < files.length; i++)
-            {
-                Log.d(TAG, "FileName:" + files[i].getName());
-            }
-            */
-            return files;
+            return new File(dir).listFiles();
         }
         catch (Exception e)
         {
@@ -81,24 +71,16 @@ public class FileIO {
             if (data != null) {
                 bufferedWriter.write(data);
             }
-            /*
-            bufferedWriter.write(data + "\n");
-            bufferedWriter.write("Hello there,");
-            bufferedWriter.write(" here is some text.");
-            bufferedWriter.newLine();
-            bufferedWriter.write("We are writing");
-            bufferedWriter.write(" the text to the file.");
-            */
 
             bufferedWriter.close();
             return resFile;
         }
         catch(IOException e) {
-           Log.e(TAG, "Error writing to file '" + fileName + "'");
+           Log.e(TAG, "Error writing to file '" + fileName + "'", e);
            return null;
         }
         catch (Exception e) {
-            Log.e(TAG, "Other Error: " + e.getMessage());
+            Log.e(TAG, "Other Error: ", e);
             return null;
         }
     }
@@ -124,11 +106,10 @@ public class FileIO {
                 ret = stringBuilder.toString();
             }
         } catch (FileNotFoundException e) {
-            Log.e(TAG, "File not found: " + e.toString());
+            Log.e(TAG, "File not found: ", e);
         } catch (IOException e) {
-            Log.e(TAG, "Can not read file: " + e.toString());
+            Log.e(TAG, "Can not read file: ", e);
         }
-
         return ret;
     }
 }

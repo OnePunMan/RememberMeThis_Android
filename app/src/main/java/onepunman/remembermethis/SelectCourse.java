@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import java.io.File;
 
 public class SelectCourse extends AppCompatActivity {
-
+    final static String TAG = "Debug";
     LinearLayout ll;
 
     @Override
@@ -32,7 +32,7 @@ public class SelectCourse extends AppCompatActivity {
         final File [] courseFiles = FileIO.getCourseFiles();
 
         if (courseFiles == null || courseFiles.length <= 0) {
-            Log.d("FileIO", "No Courses");
+            Log.d(TAG, "No Courses");
             return;
         }
 

@@ -17,6 +17,7 @@ public class Popup extends AppCompatActivity {
 
     Button btnUpdateTime;
     Button btnAddWin;
+    Button btnAddLose;
     Button btnSave;
 
     @Override
@@ -25,7 +26,7 @@ public class Popup extends AppCompatActivity {
         setContentView(R.layout.activity_popup);
 
         defText = findViewById(R.id.lblDefText);
-        btnUpdateTime = findViewById(R.id.btnUpdateTime);
+        btnAddLose = findViewById(R.id.btnAddLose);
         btnAddWin = findViewById(R.id.btnAddWin);
         btnSave = findViewById(R.id.btnSave);
 

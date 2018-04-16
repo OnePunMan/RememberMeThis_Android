@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">RememberMeThis</string>
     <string name="select_course_title">Select Course</string>
-    <string name="AppTitle">RememberMeThis</string>
+    <string name="app_title">RememberMeThis</string>
     <string name="title_activity_select_course">SelectCourse</string>
     <string name="back">Back</string>
     <string name="exit">Exit</string>
@@ -10,8 +10,8 @@
     <string name="create">Create</string>
     <string name="view_courses">View Courses</string>
     <string name="course_title_placeholder">TITLE_GOES_HERE</string>
-    <string name="addDef">Add New Definition +</string>
-    <string name="add_def_name_placeholder">Enter a name...</string>
-    <string name="add_def_desc_placeholder">Enter a description...</string>
-    <string name="add_def_level_placeholder">Enter a level...</string>
+    <string name="add_new_def">Add New Definition +</string>
+    <string name="add_def_name_placeholder">Enter a name…</string>
+    <string name="add_def_desc_placeholder">Enter a description…</string>
+    <string name="add_def_level_placeholder">Enter a level…</string>
 </resources>

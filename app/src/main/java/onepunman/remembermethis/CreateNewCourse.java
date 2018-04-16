@@ -18,8 +18,6 @@ public class CreateNewCourse extends AppCompatActivity {
     private EditText course_name_text;
     private EditText course_description_text;
 
-    //private String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/RememberMeThis";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,11 +31,6 @@ public class CreateNewCourse extends AppCompatActivity {
             public void onClick(View v) {
                 String courseName = course_name_text.getText().toString();
                 String courseDescription = course_description_text.getText().toString();
-
-                //ShowAlert(FileIO.readFromFile(CreateNewCourse.this));
-                //ShowAlert(getFilesDir().toString());
-                //ShowAlert(courseName);
-                //ShowAlert(courseDescription);
 
                 Course newCourse = new Course();
                 if (newCourse.createNew(courseName, courseDescription)) {
@@ -60,8 +53,6 @@ public class CreateNewCourse extends AppCompatActivity {
                 finish();
             }
         });
-
-
     }
 
     private void showAlert(String title, String message) {

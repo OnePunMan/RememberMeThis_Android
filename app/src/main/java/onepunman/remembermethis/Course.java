@@ -161,6 +161,7 @@ public class Course {
                 return true;
             }
             catch (Exception e) {
+                Log.e(TAG, "Failed to create new file: ", e);
                 return false;
             }
         }

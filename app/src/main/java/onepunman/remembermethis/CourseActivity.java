@@ -22,11 +22,11 @@ import java.util.ArrayList;
 public class CourseActivity extends AppCompatActivity {
     final static String TAG = "Debug";
     LinearLayout ll;
-    static TextView lblCourseTitle;
-    static TextView lblDescription;
+    TextView lblCourseTitle;
+    TextView lblDescription;
 
-    private static File _currentCourseFile;
-    private static Course _currentCourse;
+    private File _currentCourseFile;
+    private Course _currentCourse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,16 +104,17 @@ public class CourseActivity extends AppCompatActivity {
                 coursePopup.setContentView(R.layout.activity_popup);
 
                 final TextView defText = coursePopup.findViewById(R.id.lblDefText);
-                Button btnUpdateTime = coursePopup.findViewById(R.id.btnUpdateTime);
+                Button btnAddLoss = coursePopup.findViewById(R.id.btnAddLose);
                 Button btnAddWin = coursePopup.findViewById(R.id.btnAddWin);
                 Button btnSave = coursePopup.findViewById(R.id.btnSave);
+                Button btnReset = coursePopup.findViewById(R.id.btnReset);
 
                 updateContent(defText, def.toString());
 
-                btnUpdateTime.setOnClickListener(new View.OnClickListener() {
+                btnAddLoss.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        def.updateTime();
+                        def.updateReviewed(false, true);
                         updateContent(defText, def.toString());
                     }
                 });
@@ -121,7 +122,7 @@ public class CourseActivity extends AppCompatActivity {
                 btnAddWin.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        def.updateReviewed(true, false);
+                        def.updateReviewed(true, true);
                         updateContent(defText, def.toString());
                     }
                 });
@@ -130,6 +131,14 @@ public class CourseActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         coursePopup.dismiss();
+                    }
+                });
+
+                btnReset.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        def.reset();
+                        updateContent(defText, def.toString());
                     }
                 });
 

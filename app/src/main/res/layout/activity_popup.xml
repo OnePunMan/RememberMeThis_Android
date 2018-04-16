@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:grid="http://schemas.android.com/apk/res-auto"
     tools:context=".Popup">
 
     <TextView
@@ -20,24 +21,32 @@
         android:text="TextView" />
 
     <android.support.v7.widget.GridLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/lblDefText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="22dp">
+        android:layout_marginBottom="22dp"
 
-        <Button
-            android:id="@+id/btnUpdateTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Update Time" />
+        grid:alignmentMode="alignBounds"
+        grid:columnCount="2">
 
         <Button
             android:id="@+id/btnAddWin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Win" />
+            android:text="Review Correct" />
+
+        <Button
+            android:id="@+id/btnAddLose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Review Incorrect" />
+
+        <Button
+            android:id="@+id/btnReset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reset" />
 
         <Button
             android:id="@+id/btnSave"

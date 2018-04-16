@@ -14,13 +14,20 @@ import static java.lang.Math.round;
 
 public class Definition implements Serializable {
     final static String TAG = "Debug";
-    public final static int[] TIME_INTERVALS = {2, 4, 4, 8, 12, 12, 24, 48, 48, 120, 840};
     public final static String NOT_TESTED = "Not Tested Yet";
     public final static String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public final static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(TIME_FORMAT);
     public final static int SECONDS_PER_HOUR = 3600;
     public final static int HOURS_PER_DAY = 24;
     public final static double MIN_PERCENT = 0.75;
+    public final static int[] TIME_INTERVALS = {2, 4, 4, 8, 12, 12, 24, 
+            2 * HOURS_PER_DAY,
+            2 * HOURS_PER_DAY,
+            5 * HOURS_PER_DAY,
+            10 * HOURS_PER_DAY,
+            20 * HOURS_PER_DAY,
+            30 * HOURS_PER_DAY
+    };
     public final static int NUM_FIELDS = Section.values().length;
 
     public enum Section {
@@ -121,8 +128,8 @@ public class Definition implements Serializable {
         Formatter formatter = new Formatter();
 
         if (hours < Definition.HOURS_PER_DAY) {
-            long roundedHours = max(round(hours * 10.0) / 10, 0);
-            return formatter.format("%1$2d %2$2s", roundedHours, roundedHours == 1 ? "hour" : "hours").toString();
+            //long roundedHours = max(round(hours * 10.0) / 10, 0);
+            return formatter.format("%1$.1f %2$2s", max(hours, 0), hours == 1 ? "hour" : "hours").toString();
         }
 
         long days = 0;
@@ -155,7 +162,18 @@ public class Definition implements Serializable {
         return (double) _timesCorrect / _timesTested;
     }
 
-    public void setBeginning(){
+    public void reset() {
+        setBeginning();
+        _lastTested = null;
+        _timesTested = 0;
+        _timesCorrect = 0;
+        _streak = 0;
+        _stage = 0;
+        _ignore = false;
+        _difficult = false;
+    }
+
+    private void setBeginning(){
         _timeCreated = new Date();
     }
 

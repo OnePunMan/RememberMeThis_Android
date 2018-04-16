@@ -18,7 +18,6 @@ import android.widget.Toast;
 import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
-
     private static final String TAG = "Main";
     private int STORAGE_PERMISSION_CODE = 1;
 
@@ -30,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
         final Button exit_button = findViewById(R.id.btn_exit);
         exit_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Log.i(TAG, "Click!");
                 finish();
                 System.exit(0);
             }
@@ -56,13 +54,12 @@ public class MainActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(MainActivity.this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
         {
-            Toast.makeText(MainActivity.this, "Permission Already Granted", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(MainActivity.this, "Permission Already Granted", Toast.LENGTH_SHORT).show();
             FileIO.initDirectory();
         }
         else {
             requestStoragePermission();
         }
-
 
         Log.i(TAG, "onCreate");
     }
@@ -71,15 +68,15 @@ public class MainActivity extends AppCompatActivity {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE))
         {
             new AlertDialog.Builder(this)
-                    .setTitle("Permission needed")
-                    .setMessage("You denied the permission last time, we need permission, grant?")
+                    .setTitle("Permission Needed")
+                    .setMessage("You denied the permission last time, we need permission to save and load course files, grant?")
                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
                         }
                     })
-                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss();
@@ -87,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
                     })
                     .create()
                     .show();
-        } else {
+        }
+        else {
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
         }
         FileIO.initDirectory();
@@ -98,7 +96,8 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == STORAGE_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Permission Granted!", Toast.LENGTH_SHORT).show();
-            } else {
+            }
+            else {
                 Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show();
             }
         }
