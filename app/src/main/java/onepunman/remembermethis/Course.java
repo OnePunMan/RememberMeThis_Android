@@ -115,12 +115,12 @@ public class Course {
         }
     }
 
-    public ArrayList<Definition> getAll(int level) {
+    public ArrayList<Definition> getAll(String level) {
         return _definitions;
     }
 
     public ArrayList<Definition> getAll() {
-        return getAll(-1);
+        return getAll(null);
     }
 
     public String getName() {
@@ -212,11 +212,17 @@ public class Course {
 
     // This is ReviewRecommended
     public ArrayList<Definition> getReviewList() {
-        return _definitions;
+        return getReviewList(null);
     }
 
-    public ArrayList<Definition> getReviewList(int level) {
-        return _definitions;
+    public ArrayList<Definition> getReviewList(String level) {
+        ArrayList<Definition> reviewList = new ArrayList<>();
+        for (Definition def : _definitions) {
+            if (def.isReviewtime() || def.correctPercent() < Definition.MIN_PERCENT) {
+                reviewList.add(def);
+            }
+        }
+        return reviewList;
     }
 
     public ArrayList<Definition> getDifficultDefinitions() {

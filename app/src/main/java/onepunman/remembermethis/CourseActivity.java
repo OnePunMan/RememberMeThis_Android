@@ -3,10 +3,8 @@ package onepunman.remembermethis;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.File;
-import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Formatter;
 
 public class CourseActivity extends AppCompatActivity {
     final static String TAG = "Debug";
@@ -25,8 +23,13 @@ public class CourseActivity extends AppCompatActivity {
     TextView lblCourseTitle;
     TextView lblDescription;
 
+    Button btnAddDefinition;
+    Button btnReview;
+    Button backButton;
+
     private File _currentCourseFile;
     private Course _currentCourse;
+    Formatter formatter = new Formatter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +40,17 @@ public class CourseActivity extends AppCompatActivity {
         lblCourseTitle = findViewById(R.id.courseTitle);
         lblDescription = findViewById(R.id.courseDescription);
 
-        final Button backButton = findViewById(R.id.btn_back);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                _currentCourse.save();
-                finish();
-            }
-        });
+        File f = (File) getIntent().getSerializableExtra("courseFile");
+        init(f);
 
-        final Button btnAddDefinition = findViewById(R.id.btnAddDef);
+        ArrayList<Definition> definitions = _currentCourse.getAll();
+        ArrayList<Definition> reviewList = _currentCourse.getReviewList();
+
+        for (final Definition def : definitions) {
+            addDefButton(def);
+        }
+
+        btnAddDefinition = findViewById(R.id.btnAddDef);
         btnAddDefinition.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,6 +74,7 @@ public class CourseActivity extends AppCompatActivity {
                                         txtDefLevel.getText().toString());
                                 _currentCourse.addDefinition(newDef);
                                 addDefButton(newDef);
+                                refreshView();
                             }
                         })
                         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -82,14 +88,22 @@ public class CourseActivity extends AppCompatActivity {
             }
         });
 
-        File f = (File) getIntent().getSerializableExtra("courseFile");
-        Init(f);
+        backButton = findViewById(R.id.btn_back);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                _currentCourse.save();
+                finish();
+            }
+        });
 
-        ArrayList<Definition> definitions = _currentCourse.getAll(-1);
-
-        for (final Definition def : definitions) {
-            addDefButton(def);
-        }
+        btnReview = findViewById(R.id.btnReview);
+        btnReview.setText(formatter.format("Review (%1$1d)", reviewList.size()).toString());
+        btnReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Review Stuff
+            }
+        });
     }
 
     private void addDefButton (final Definition def) {
@@ -153,6 +167,12 @@ public class CourseActivity extends AppCompatActivity {
                     }
                 });
 
+                coursePopup.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        refreshView();
+                    }
+                });
                 coursePopup.show();
             }
         });
@@ -163,11 +183,15 @@ public class CourseActivity extends AppCompatActivity {
         text.setText(content);
     }
 
-    private void Init(File courseFile) {
+    private void init(File courseFile) {
         _currentCourse = new Course();
         _currentCourseFile = courseFile;
         _currentCourse.loadFromFile(courseFile);
         lblCourseTitle.setText(_currentCourse.getName());
         lblDescription.setText(_currentCourse.getDescription());
+    }
+
+    private void refreshView() {
+        btnReview.setText(formatter.format("Review (%1$1d)", _currentCourse.getReviewList().size()).toString());
     }
 }

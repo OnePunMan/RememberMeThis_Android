@@ -14,4 +14,5 @@
     <string name="add_def_name_placeholder">Enter a name…</string>
     <string name="add_def_desc_placeholder">Enter a description…</string>
     <string name="add_def_level_placeholder">Enter a level…</string>
+    <string name="review">Review</string>
 </resources>
