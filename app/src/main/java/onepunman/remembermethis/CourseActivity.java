@@ -93,7 +93,7 @@ public class CourseActivity extends AppCompatActivity {
     }
 
     private void addDefButton (final Definition def) {
-        Button btn = new Button(this);
+        final Button btn = new Button(this);
         btn.setText(def.getName() + ": " + def.getDescription());
         btn.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         btn.setOnClickListener(new View.OnClickListener() {
@@ -108,6 +108,7 @@ public class CourseActivity extends AppCompatActivity {
                 Button btnAddWin = coursePopup.findViewById(R.id.btnAddWin);
                 Button btnSave = coursePopup.findViewById(R.id.btnSave);
                 Button btnReset = coursePopup.findViewById(R.id.btnReset);
+                Button btnDelete = coursePopup.findViewById(R.id.btnDelete);
 
                 updateContent(defText, def.toString());
 
@@ -139,6 +140,16 @@ public class CourseActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         def.reset();
                         updateContent(defText, def.toString());
+                    }
+                });
+
+                btnDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        _currentCourse.removeDefinition(def);
+                        updateContent(defText, def.toString());
+                        ll.removeView(btn);
+                        coursePopup.dismiss();
                     }
                 });
 

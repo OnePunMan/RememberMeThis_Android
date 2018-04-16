@@ -148,6 +148,10 @@ public class Course {
         _definitions.add(newDef);
     }
 
+    public boolean removeDefinition(Definition def) {
+        return _definitions.remove(def);
+    }
+
     public boolean save() {
         if (_name == null || _name.trim().length() <= 0) {
             Log.e(TAG, "Unable to save, course is in an invalid state.");
@@ -156,12 +160,13 @@ public class Course {
 
         if (_courseFile == null) {
             // write to new file
-            try {
-                _courseFile = FileIO.writeToFile(_name, _name + "\n" + _description + "\n" + DELIMITER);
+            _courseFile = FileIO.writeToFile(_name, _name + "\n" + _description + "\n" + DELIMITER);
+
+            if (_courseFile != null) {
                 return true;
             }
-            catch (Exception e) {
-                Log.e(TAG, "Failed to create new file: ", e);
+            else {
+                Log.e(TAG, "Failed to create new file!");
                 return false;
             }
         }
