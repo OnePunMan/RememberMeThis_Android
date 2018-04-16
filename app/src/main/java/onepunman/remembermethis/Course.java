@@ -76,7 +76,7 @@ public class Course {
                                 new Definition(
                                         sections[Definition.Section.NAME.ordinal()],
                                         sections[Definition.Section.DESCRIPTION.ordinal()],
-                                        Integer.parseInt(sections[Definition.Section.LEVEL.ordinal()]),
+                                        sections[Definition.Section.LEVEL.ordinal()],
                                         sections[Definition.Section.TIME_CREATED.ordinal()],
                                         sections[Definition.Section.LAST_TESTED.ordinal()],
                                         Integer.parseInt(sections[Definition.Section.TIMES_TESTED.ordinal()]),
@@ -139,7 +139,7 @@ public class Course {
         return null;
     }
 
-    public void addDefinition(String name, String description, int level) {
+    public void addDefinition(String name, String description, String level) {
         Definition newDef = new Definition(name, description, level);
         _definitions.add(newDef);
     }

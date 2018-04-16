@@ -23,7 +23,7 @@ public class Definition implements Serializable {
     public final static double MIN_PERCENT = 0.75;
     public final static int NUM_FIELDS = Section.values().length;
 
-    public static enum Section {
+    public enum Section {
         NAME,
         DESCRIPTION,
         LEVEL,
@@ -39,7 +39,7 @@ public class Definition implements Serializable {
 
     private String _name;
     private String _description;
-    private int _level;
+    private String _level;
     private Date _timeCreated;
     private Date _lastTested;
     private int _timesTested;
@@ -49,7 +49,7 @@ public class Definition implements Serializable {
     private boolean _ignore;
     private boolean _difficult;
 
-    public Definition(String name , String description, int level, String timeCreated, String lastTested, int timesTested, int timesCorrect, int streak, int stage, boolean ignore, boolean difficult){
+    public Definition(String name , String description, String level, String timeCreated, String lastTested, int timesTested, int timesCorrect, int streak, int stage, boolean ignore, boolean difficult){
         this._name = name != null ? name.trim() : null;
         this._description = description != null ? description.trim() : null;
         this._level = level;
@@ -63,7 +63,7 @@ public class Definition implements Serializable {
         this._difficult = difficult;
     }
 
-    public Definition(String name, String description, int level) {
+    public Definition(String name, String description, String level) {
         this(
                 name,
                 description,
@@ -79,7 +79,7 @@ public class Definition implements Serializable {
         );
     }
 
-    private Definition(String name , String description, int level, Date timeCreated, Date lastTested, int timesTested, int timesCorrect, int streak, int stage, boolean ignore, boolean difficult){
+    private Definition(String name , String description, String level, Date timeCreated, Date lastTested, int timesTested, int timesCorrect, int streak, int stage, boolean ignore, boolean difficult){
         this._name = name != null ? name.trim() : null;
         this._description = description != null ? description.trim() : null;
         this._level = level;
@@ -96,9 +96,9 @@ public class Definition implements Serializable {
     // Getters
     public String getName () { return _name; }
     public String getDescription () { return _description; }
-    public int getLevel() { return _level; }
-    public String getTimeCreated () { return DATE_FORMATTER.format(_timeCreated); }
-    public String getLastTested() { return DATE_FORMATTER.format(_lastTested); }
+    public String getLevel() { return _level; }
+    public String getTimeCreated () { return _timeCreated == null ? "None" : DATE_FORMATTER.format(_timeCreated); }
+    public String getLastTested() { return _lastTested == null ? NOT_TESTED : DATE_FORMATTER.format(_lastTested); }
     public int getTimesTested() { return _timesTested; }
     public int getTimesCorrect() { return _timesCorrect; }
     public int getStreak() { return _streak; }
@@ -107,11 +107,11 @@ public class Definition implements Serializable {
     public boolean isDifficult() { return _difficult; }
 
     public static Date parseDate(String stringDate) {
+        if (stringDate == null || stringDate.trim().equals(NOT_TESTED)) return null;
         try {
-            Date res = DATE_FORMATTER.parse(stringDate);
-            return res;
+            return DATE_FORMATTER.parse(stringDate);
         } catch (ParseException e) {
-            Log.e(TAG, "Parsing Failed!");
+            Log.e(TAG, "Parsing Failed!", e);
             return null;
         }
     }
@@ -192,7 +192,7 @@ public class Definition implements Serializable {
             String s = formatter.format(
                     "Name: %1$2s\n" +
                             "Description: %2$2s\n" +
-                            "Level: %3$2d\n" +
+                            "Level: %3$2s\n" +
                             "Created: %4$2s\n" +
                             "Last Tested: %5$2s\n" +
                             "Times Tested: %6$2d\n" +
@@ -206,8 +206,8 @@ public class Definition implements Serializable {
                     _name,
                     _description,
                     _level,
-                    DATE_FORMATTER.format(_timeCreated),
-                    DATE_FORMATTER.format(_lastTested),
+                    getTimeCreated(),
+                    getLastTested(),
                     _timesTested,
                     _timesCorrect,
                     _streak,
