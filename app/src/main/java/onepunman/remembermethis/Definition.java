@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Formatter;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -15,6 +14,7 @@ import static java.lang.Math.round;
 public class Definition implements Serializable {
     final static String TAG = "Debug";
     public final static String NOT_TESTED = "Not Tested Yet";
+    public final static String EMPTY_PLACEHOLDER = "<No Description>";
     public final static String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public final static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(TIME_FORMAT);
     public final static int SECONDS_PER_HOUR = 3600;
@@ -57,9 +57,9 @@ public class Definition implements Serializable {
     private boolean _difficult;
 
     public Definition(String name , String description, String level, String timeCreated, String lastTested, int timesTested, int timesCorrect, int streak, int stage, boolean ignore, boolean difficult){
-        this._name = name != null ? name.trim() : null;
-        this._description = description != null ? description.trim() : null;
-        this._level = level;
+        this._name = (name == null || name.isEmpty()) ? null : name.trim();
+        this._description = (description == null || description.isEmpty()) ? EMPTY_PLACEHOLDER : description.trim();
+        this._level = (level == null || level.isEmpty()) ? null : level.trim();
         this._timeCreated = parseDate(timeCreated != null ? timeCreated.trim() : null);
         this._lastTested = parseDate(lastTested != null ? lastTested.trim() : null);
         this._timesTested = timesTested;
@@ -87,9 +87,9 @@ public class Definition implements Serializable {
     }
 
     private Definition(String name , String description, String level, Date timeCreated, Date lastTested, int timesTested, int timesCorrect, int streak, int stage, boolean ignore, boolean difficult){
-        this._name = name != null ? name.trim() : null;
-        this._description = description != null ? description.trim() : null;
-        this._level = level;
+        this._name = (name == null || name.isEmpty()) ? null : name.trim();
+        this._description = (description == null || description.isEmpty()) ? EMPTY_PLACEHOLDER : description.trim();
+        this._level = (level == null || level.isEmpty()) ? null : level.trim();
         this._timeCreated = timeCreated;
         this._lastTested = lastTested;
         this._timesTested = timesTested;
@@ -113,6 +113,31 @@ public class Definition implements Serializable {
     public boolean isIgnore() { return _ignore; }
     public boolean isDifficult() { return _difficult; }
 
+    // Setters
+    public boolean setName (String newName) {
+        if (newName == null || newName.length() <= 0) return false;
+        _name = newName;
+        return true;
+    }
+
+    public boolean setDescription (String newDesc) {
+        if (newDesc == null || newDesc.length() <= 0) {
+            _description = EMPTY_PLACEHOLDER;
+            return false;
+        }
+        _description = newDesc;
+        return true;
+    }
+
+    public boolean setLevel (String newLevel) {
+        if (newLevel == null || newLevel.length() <= 0) {
+            _level = null;
+            return false;
+        }
+        _level = newLevel;
+        return true;
+    }
+
     public static Date parseDate(String stringDate) {
         if (stringDate == null || stringDate.trim().equals(NOT_TESTED)) return null;
         try {
@@ -125,11 +150,10 @@ public class Definition implements Serializable {
 
     public String formatNextReviewTime (){
         double hours = (double)nextReviewTime() / Definition.SECONDS_PER_HOUR;
-        Formatter formatter = new Formatter();
 
         if (hours < Definition.HOURS_PER_DAY) {
             //long roundedHours = max(round(hours * 10.0) / 10, 0);
-            return formatter.format("%1$.1f %2$2s", max(hours, 0), hours == 1 ? "hour" : "hours").toString();
+            return String.format("%1$.1f %2$2s", max(hours, 0), hours == 1 ? "hour" : "hours");
         }
 
         long days = 0;
@@ -138,10 +162,10 @@ public class Definition implements Serializable {
             hours -= Definition.HOURS_PER_DAY;
         }
         long roundedHours = round(hours * 10.0) / 10;
-        return formatter.format("%1$2d %2$2s %3$2d %4$2s", days, (days == 1 ? "day" : "days"), roundedHours, (roundedHours == 1 ? "hour" : "hours")).toString();
+        return String.format("%1$2d %2$2s %3$2d %4$2s", days, (days == 1 ? "day" : "days"), roundedHours, (roundedHours == 1 ? "hour" : "hours"));
     }
 
-    public boolean isReviewtime(){
+    public boolean isReviewTime(){
         if (_timeCreated == null){
             Log.e(TAG, "Time Created should not be null! Check the save data.");
             return false;
@@ -205,9 +229,8 @@ public class Definition implements Serializable {
     }
 
     public String toString() {
-        Formatter formatter = new Formatter();
         try {
-            String s = formatter.format(
+            String s = String.format(
                     "Name: %1$2s\n" +
                             "Description: %2$2s\n" +
                             "Level: %3$2s\n" +
@@ -223,7 +246,7 @@ public class Definition implements Serializable {
                             "Difficult: %13$2s\n",
                     _name,
                     _description,
-                    _level,
+                    _level == null ? "-" : _level,
                     getTimeCreated(),
                     getLastTested(),
                     _timesTested,
@@ -234,7 +257,7 @@ public class Definition implements Serializable {
                     formatNextReviewTime(),
                     (_ignore ? "Yes" : "No"),
                     (_difficult ? "Yes" : "No")
-            ).toString();
+            );
 
             return s;
         } catch (Exception e) {

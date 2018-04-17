@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 public class Course {
     final String TAG = "Debug";
     public final static String DELIMITER = "|";
-    public final static String EMPTY_PLACEHOLDER = "<No Description>";
 
     private String _id;
     private String _name;
@@ -36,7 +35,7 @@ public class Course {
     public boolean createNew(String name, String description){
         if (name == null || name.trim().length() <= 0) return false;
         _name = name;
-        _description = (description == null|| description.length() <= 0) ? EMPTY_PLACEHOLDER : description;
+        _description = (description == null|| description.length() <= 0) ? Definition.EMPTY_PLACEHOLDER : description;
         return true;
     }
 
@@ -218,7 +217,7 @@ public class Course {
     public ArrayList<Definition> getReviewList(String level) {
         ArrayList<Definition> reviewList = new ArrayList<>();
         for (Definition def : _definitions) {
-            if (def.isReviewtime() || def.correctPercent() < Definition.MIN_PERCENT) {
+            if (def.isReviewTime() || def.correctPercent() < Definition.MIN_PERCENT) {
                 reviewList.add(def);
             }
         }

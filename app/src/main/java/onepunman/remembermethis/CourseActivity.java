@@ -12,10 +12,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Formatter;
 
 public class CourseActivity extends AppCompatActivity {
     final static String TAG = "Debug";
@@ -29,7 +29,6 @@ public class CourseActivity extends AppCompatActivity {
 
     private File _currentCourseFile;
     private Course _currentCourse;
-    Formatter formatter = new Formatter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +67,12 @@ public class CourseActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 // Add new def
+                                String name = txtDefName.getText().toString();
+                                if (name.length() <= 0) {
+                                    Toast.makeText(CourseActivity.this,"Definition name cannot be empty",Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+
                                 Definition newDef = new Definition(
                                         txtDefName.getText().toString(),
                                         txtDefDesc.getText().toString(),
@@ -97,7 +102,7 @@ public class CourseActivity extends AppCompatActivity {
         });
 
         btnReview = findViewById(R.id.btnReview);
-        btnReview.setText(formatter.format("Review (%1$1d)", reviewList.size()).toString());
+        refreshView();
         btnReview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,13 +123,22 @@ public class CourseActivity extends AppCompatActivity {
                 coursePopup.setContentView(R.layout.activity_popup);
 
                 final TextView defText = coursePopup.findViewById(R.id.lblDefText);
-                Button btnAddLoss = coursePopup.findViewById(R.id.btnAddLose);
                 Button btnAddWin = coursePopup.findViewById(R.id.btnAddWin);
+                Button btnAddLoss = coursePopup.findViewById(R.id.btnAddLose);
+                Button btnEdit = coursePopup.findViewById(R.id.btnEdit);
                 Button btnSave = coursePopup.findViewById(R.id.btnSave);
                 Button btnReset = coursePopup.findViewById(R.id.btnReset);
                 Button btnDelete = coursePopup.findViewById(R.id.btnDelete);
 
                 updateContent(defText, def.toString());
+
+                btnAddWin.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        def.updateReviewed(true, true);
+                        updateContent(defText, def.toString());
+                    }
+                });
 
                 btnAddLoss.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -134,11 +148,10 @@ public class CourseActivity extends AppCompatActivity {
                     }
                 });
 
-                btnAddWin.setOnClickListener(new View.OnClickListener() {
+                btnEdit.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View view) {
-                        def.updateReviewed(true, true);
-                        updateContent(defText, def.toString());
+                    public void onClick(View v) {
+                        // Open popup edit window
                     }
                 });
 
@@ -161,7 +174,6 @@ public class CourseActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         _currentCourse.removeDefinition(def);
-                        updateContent(defText, def.toString());
                         ll.removeView(btn);
                         coursePopup.dismiss();
                     }
@@ -179,9 +191,6 @@ public class CourseActivity extends AppCompatActivity {
         ll.addView(btn);
     }
 
-    private void updateContent(TextView text, String content) {
-        text.setText(content);
-    }
 
     private void init(File courseFile) {
         _currentCourse = new Course();
@@ -191,7 +200,11 @@ public class CourseActivity extends AppCompatActivity {
         lblDescription.setText(_currentCourse.getDescription());
     }
 
+    private void updateContent(TextView text, String content) {
+        text.setText(content);
+    }
+
     private void refreshView() {
-        btnReview.setText(formatter.format("Review (%1$1d)", _currentCourse.getReviewList().size()).toString());
+        btnReview.setText(String.format("Review (%1$d)", _currentCourse.getReviewList().size()));
     }
 }
