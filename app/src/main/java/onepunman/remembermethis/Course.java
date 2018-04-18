@@ -35,7 +35,7 @@ public class Course {
     public boolean createNew(String name, String description){
         if (name == null || name.trim().length() <= 0) return false;
         _name = name;
-        _description = (description == null|| description.length() <= 0) ? Definition.EMPTY_PLACEHOLDER : description;
+        _description = (description == null|| description.length() <= 0) ? Definition.EMPTY_DESC_PLACEHOLDER : description;
         return true;
     }
 
@@ -217,7 +217,7 @@ public class Course {
     public ArrayList<Definition> getReviewList(String level) {
         ArrayList<Definition> reviewList = new ArrayList<>();
         for (Definition def : _definitions) {
-            if (def.isReviewTime() || def.correctPercent() < Definition.MIN_PERCENT) {
+            if ((def.isReviewTime() || def.isLowCorrectRate()) && !def.isIgnore()) {
                 reviewList.add(def);
             }
         }

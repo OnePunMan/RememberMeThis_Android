@@ -14,11 +14,13 @@ import static java.lang.Math.round;
 public class Definition implements Serializable {
     final static String TAG = "Debug";
     public final static String NOT_TESTED = "Not Tested Yet";
-    public final static String EMPTY_PLACEHOLDER = "<No Description>";
+    public final static String EMPTY_DESC_PLACEHOLDER = "<No Description>";
+    public final static String EMPTY_LEVEL_PLACEHOLDER = "No Level";
     public final static String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public final static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(TIME_FORMAT);
     public final static int SECONDS_PER_HOUR = 3600;
     public final static int HOURS_PER_DAY = 24;
+    public final static int MIN_ATTEMPTS = 4;
     public final static double MIN_PERCENT = 0.75;
     public final static int[] TIME_INTERVALS = {2, 4, 4, 8, 12, 12, 24, 
             2 * HOURS_PER_DAY,
@@ -58,8 +60,8 @@ public class Definition implements Serializable {
 
     public Definition(String name , String description, String level, String timeCreated, String lastTested, int timesTested, int timesCorrect, int streak, int stage, boolean ignore, boolean difficult){
         this._name = (name == null || name.trim().isEmpty()) ? null : name.trim();
-        this._description = (description == null || description.trim().isEmpty()) ? EMPTY_PLACEHOLDER : description.trim();
-        this._level = (level == null || level.trim().isEmpty()) ? null : level.trim();
+        this._description = (description == null || description.trim().isEmpty()) ? EMPTY_DESC_PLACEHOLDER : description.trim();
+        this._level = (level == null || level.trim().isEmpty()) ? EMPTY_LEVEL_PLACEHOLDER : level.trim();
         this._timeCreated = parseDate(timeCreated != null ? timeCreated.trim() : null);
         this._lastTested = parseDate(lastTested != null ? lastTested.trim() : null);
         this._timesTested = timesTested;
@@ -88,8 +90,8 @@ public class Definition implements Serializable {
 
     private Definition(String name , String description, String level, Date timeCreated, Date lastTested, int timesTested, int timesCorrect, int streak, int stage, boolean ignore, boolean difficult){
         this._name = (name == null || name.trim().isEmpty()) ? null : name.trim();
-        this._description = (description == null || description.trim().isEmpty()) ? EMPTY_PLACEHOLDER : description.trim();
-        this._level = (level == null || level.trim().isEmpty()) ? null : level.trim();
+        this._description = (description == null || description.trim().isEmpty()) ? EMPTY_DESC_PLACEHOLDER : description.trim();
+        this._level = (level == null || level.trim().isEmpty()) ? EMPTY_LEVEL_PLACEHOLDER : level.trim();
         this._timeCreated = timeCreated;
         this._lastTested = lastTested;
         this._timesTested = timesTested;
@@ -122,7 +124,7 @@ public class Definition implements Serializable {
 
     public boolean setDescription (String newDesc) {
         if (newDesc == null || newDesc.length() <= 0) {
-            _description = EMPTY_PLACEHOLDER;
+            _description = EMPTY_DESC_PLACEHOLDER;
             return false;
         }
         _description = newDesc;
@@ -131,7 +133,7 @@ public class Definition implements Serializable {
 
     public boolean setLevel (String newLevel) {
         if (newLevel == null || newLevel.length() <= 0) {
-            _level = null;
+            _level = EMPTY_LEVEL_PLACEHOLDER;
             return false;
         }
         _level = newLevel;
@@ -184,6 +186,10 @@ public class Definition implements Serializable {
         return nextReviewTime() <= 0;
     }
 
+    public boolean isLowCorrectRate() {
+        return correctPercent() < MIN_PERCENT && _timesTested >= MIN_ATTEMPTS;
+    }
+
     public long nextReviewTime(){
         Date previousTime = _lastTested == null ? _timeCreated : _lastTested;
         Date now = new Date();
@@ -224,9 +230,26 @@ public class Definition implements Serializable {
             if (advanceStage) {
                 nextStage();
             }
-            _streak += 1;
-        } else {
-            _streak = 0;
+            if (_streak < 0) {
+                _streak = 0;
+            }
+            else {
+                _streak += 1;
+                if (_streak >= 4) {
+                    _difficult = false;
+                }
+            }
+        }
+        else {
+            if (_streak > 0) {
+                _streak = 0;
+            }
+            else {
+                _streak -= 1;
+                if (_streak <= -2) {
+                    _difficult = true;
+                }
+            }
             previousStage();
         }
     }
@@ -257,7 +280,7 @@ public class Definition implements Serializable {
                             "Difficult: %13$2s\n",
                     _name,
                     _description,
-                    _level == null ? "-" : _level,
+                    _level == null || _level.equals(EMPTY_LEVEL_PLACEHOLDER) ? "-" : _level,
                     getTimeCreated(),
                     getLastTested(),
                     _timesTested,
