@@ -112,4 +112,15 @@ public class FileIO {
         }
         return ret;
     }
+
+    public static boolean isAlreadyExist(String fileName) {
+        try {
+            String goodName = fileName.contains(COURSE_EXTENSION) ? fileName : fileName + COURSE_EXTENSION;
+            File temp = new File(COURSES_PATH + File.separator + goodName);
+            return temp.exists();
+        } catch (Exception e) {
+            Log.e(TAG, "Error opening new file: ", e);
+            return false;
+        }
+    }
 }

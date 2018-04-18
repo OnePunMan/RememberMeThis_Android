@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 public class Course {
     final String TAG = "Debug";
     public final static String DELIMITER = "|";
+    public final static String EMPTY_COURSE_DESC_PLACEHOLDER = "<No Description>";
 
     private String _id;
     private String _name;
@@ -32,10 +33,32 @@ public class Course {
         this._difficultDefinitions = new ArrayList<Definition>();
     }
 
+    // Getters
+    public String getName() {
+        return _name;
+    }
+    public String getDescription() { return _description; }
+
+    // Setters
+    public boolean setName(String newName) {
+        if (newName == null || newName.trim().isEmpty()) return false;
+        _name = newName;
+        return true;
+    }
+
+    public boolean setDescription(String newDesc) {
+        if (newDesc == null || newDesc.trim().isEmpty()) {
+            _description = EMPTY_COURSE_DESC_PLACEHOLDER;
+            return false;
+        }
+        _description = newDesc;
+        return true;
+    }
+
     public boolean createNew(String name, String description){
         if (name == null || name.trim().length() <= 0) return false;
         _name = name;
-        _description = (description == null|| description.length() <= 0) ? Definition.EMPTY_DESC_PLACEHOLDER : description;
+        _description = (description == null|| description.length() <= 0) ? EMPTY_COURSE_DESC_PLACEHOLDER : description;
         return true;
     }
 
@@ -120,14 +143,6 @@ public class Course {
 
     public ArrayList<Definition> getAll() {
         return getAll(null);
-    }
-
-    public String getName() {
-        return _name;
-    }
-
-    public String getDescription() {
-        return _description;
     }
 
     public int defCount() {

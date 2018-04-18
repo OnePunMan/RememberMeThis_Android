@@ -25,6 +25,7 @@ public class CourseActivity extends AppCompatActivity {
 
     Button btnAddDefinition;
     Button btnReview;
+    Button btnEditCourse;
     Button backButton;
 
     private File _currentCourseFile;
@@ -79,7 +80,65 @@ public class CourseActivity extends AppCompatActivity {
                                         txtDefLevel.getText().toString());
                                 _currentCourse.addDefinition(newDef);
                                 addDefButton(newDef);
-                                refreshView();
+                                updateReviewButton();
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+
+        btnEditCourse = findViewById(R.id.btnEditCourse);
+        btnEditCourse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(CourseActivity.this);
+                LayoutInflater inflater = CourseActivity.this.getLayoutInflater();
+                final View dialogView = inflater.inflate(R.layout.dialog_new_definition, null);
+
+                final EditText txtCourseName = dialogView.findViewById(R.id.txtDefName);
+                final EditText txtCourseDesc = dialogView.findViewById(R.id.txtDefDesc);
+
+                dialogView.findViewById(R.id.txtDefLevel).setVisibility(View.GONE);
+
+                // Set existing fields
+                txtCourseName.setText(_currentCourse.getName());
+                txtCourseDesc.setText(_currentCourse.getDescription());
+
+                builder.setView(dialogView)
+                        .setTitle("Edit Course")
+                        .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // Make sure new name is not empty
+                                String name = txtCourseName.getText().toString();
+                                if (name.trim().length() <= 0) {
+                                    Toast.makeText(CourseActivity.this,"Course name cannot be empty",Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+
+                                if (FileIO.isAlreadyExist(name)) {
+                                    Toast.makeText(CourseActivity.this,"This course already exists",Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+
+                                _currentCourse.setName(name);
+                                _currentCourse.setDescription(txtCourseDesc.getText().toString());
+
+                                updateCourseHeader();
+                            }
+                        })
+                        .setNeutralButton(R.string.delete, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                showDeleteConfirmation();
                             }
                         })
                         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -102,7 +161,7 @@ public class CourseActivity extends AppCompatActivity {
         });
 
         btnReview = findViewById(R.id.btnReview);
-        refreshView();
+        updateReviewButton();
         btnReview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -198,7 +257,7 @@ public class CourseActivity extends AppCompatActivity {
                                         def.setDescription(txtDefDesc.getText().toString());
                                         def.setLevel(txtDefLevel.getText().toString());
 
-                                        refreshView();
+                                        updateReviewButton();
                                         updateContent(defText, def.toString());
                                         btn.setText(def.getName() + ": " + def.getDescription());
                                     }
@@ -241,7 +300,7 @@ public class CourseActivity extends AppCompatActivity {
                 coursePopup.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        refreshView();
+                        updateReviewButton();
                     }
                 });
                 coursePopup.show();
@@ -255,15 +314,43 @@ public class CourseActivity extends AppCompatActivity {
         _currentCourse = new Course();
         _currentCourseFile = courseFile;
         _currentCourse.loadFromFile(courseFile);
-        lblCourseTitle.setText(_currentCourse.getName());
-        lblDescription.setText(_currentCourse.getDescription());
+        updateCourseHeader();
     }
 
     private void updateContent(TextView text, String content) {
         text.setText(content);
     }
 
-    private void refreshView() {
+    private void updateReviewButton() {
         btnReview.setText(String.format("Review (%1$d)", _currentCourse.getReviewList().size()));
+    }
+
+    private void updateCourseHeader() {
+        lblCourseTitle.setText(_currentCourse.getName());
+        lblDescription.setText(_currentCourse.getDescription());
+    }
+
+    private void showDeleteConfirmation () {
+        AlertDialog.Builder msg = new AlertDialog.Builder(this);
+        msg.setMessage("Delete this course? This cannot be undone.")
+                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Delete course here
+                        _currentCourseFile.delete();
+                        dialog.dismiss();
+                        finish();
+                    }
+                })
+                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setTitle("Delete Course")
+                .setIcon(R.drawable.brain)
+                .create();
+        msg.show();
     }
 }

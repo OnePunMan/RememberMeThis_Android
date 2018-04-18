@@ -16,4 +16,6 @@
     <string name="add_def_level_placeholder">Enter a level (Optional)…</string>
     <string name="review">Review</string>
     <string name="save">Save</string>
+    <string name="edit_course">Edit Course</string>
+    <string name="delete">Delete</string>
 </resources>
