@@ -25,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/lblDefText"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="22dp"
 
         grid:alignmentMode="alignBounds"
@@ -43,6 +44,18 @@
             android:text="Review Incorrect" />
 
         <Button
+            android:id="@+id/btnToggleIgnore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Toggle Ignore" />
+
+        <Button
+            android:id="@+id/btnToggleDifficult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Toggle Difficult" />
+
+        <Button
             android:id="@+id/btnEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -55,16 +68,16 @@
             android:text="Reset" />
 
         <Button
-            android:id="@+id/btnSave"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Save" />
-
-        <Button
             android:id="@+id/btnDelete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Delete" />
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save" />
 
     </android.support.v7.widget.GridLayout>
 </RelativeLayout>

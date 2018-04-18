@@ -57,9 +57,9 @@ public class Definition implements Serializable {
     private boolean _difficult;
 
     public Definition(String name , String description, String level, String timeCreated, String lastTested, int timesTested, int timesCorrect, int streak, int stage, boolean ignore, boolean difficult){
-        this._name = (name == null || name.isEmpty()) ? null : name.trim();
-        this._description = (description == null || description.isEmpty()) ? EMPTY_PLACEHOLDER : description.trim();
-        this._level = (level == null || level.isEmpty()) ? null : level.trim();
+        this._name = (name == null || name.trim().isEmpty()) ? null : name.trim();
+        this._description = (description == null || description.trim().isEmpty()) ? EMPTY_PLACEHOLDER : description.trim();
+        this._level = (level == null || level.trim().isEmpty()) ? null : level.trim();
         this._timeCreated = parseDate(timeCreated != null ? timeCreated.trim() : null);
         this._lastTested = parseDate(lastTested != null ? lastTested.trim() : null);
         this._timesTested = timesTested;
@@ -87,9 +87,9 @@ public class Definition implements Serializable {
     }
 
     private Definition(String name , String description, String level, Date timeCreated, Date lastTested, int timesTested, int timesCorrect, int streak, int stage, boolean ignore, boolean difficult){
-        this._name = (name == null || name.isEmpty()) ? null : name.trim();
-        this._description = (description == null || description.isEmpty()) ? EMPTY_PLACEHOLDER : description.trim();
-        this._level = (level == null || level.isEmpty()) ? null : level.trim();
+        this._name = (name == null || name.trim().isEmpty()) ? null : name.trim();
+        this._description = (description == null || description.trim().isEmpty()) ? EMPTY_PLACEHOLDER : description.trim();
+        this._level = (level == null || level.trim().isEmpty()) ? null : level.trim();
         this._timeCreated = timeCreated;
         this._lastTested = lastTested;
         this._timesTested = timesTested;
@@ -137,6 +137,17 @@ public class Definition implements Serializable {
         _level = newLevel;
         return true;
     }
+
+    public boolean toggleIgnore() {
+        _ignore = !_ignore;
+        return _ignore;
+    }
+
+    public boolean toggleDifficult() {
+        _difficult = !_difficult;
+        return _difficult;
+    }
+
 
     public static Date parseDate(String stringDate) {
         if (stringDate == null || stringDate.trim().equals(NOT_TESTED)) return null;
@@ -242,7 +253,7 @@ public class Definition implements Serializable {
                             "SR Stage: %9$2d\n" +
                             "Accuracy: %10$.1f%%\n" +
                             "Next Review: %11$2s\n" +
-                            "Ignore?: %12$2s\n" +
+                            "Ignore: %12$2s\n" +
                             "Difficult: %13$2s\n",
                     _name,
                     _description,

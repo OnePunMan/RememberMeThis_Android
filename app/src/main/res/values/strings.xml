@@ -15,4 +15,5 @@
     <string name="add_def_desc_placeholder">Enter a description…</string>
     <string name="add_def_level_placeholder">Enter a level (Optional)…</string>
     <string name="review">Review</string>
+    <string name="save">Save</string>
 </resources>

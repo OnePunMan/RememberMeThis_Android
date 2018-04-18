@@ -68,7 +68,7 @@ public class CourseActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 // Add new def
                                 String name = txtDefName.getText().toString();
-                                if (name.length() <= 0) {
+                                if (name.trim().length() <= 0) {
                                     Toast.makeText(CourseActivity.this,"Definition name cannot be empty",Toast.LENGTH_SHORT).show();
                                     return;
                                 }
@@ -125,6 +125,8 @@ public class CourseActivity extends AppCompatActivity {
                 final TextView defText = coursePopup.findViewById(R.id.lblDefText);
                 Button btnAddWin = coursePopup.findViewById(R.id.btnAddWin);
                 Button btnAddLoss = coursePopup.findViewById(R.id.btnAddLose);
+                Button btnToggleIgnore = coursePopup.findViewById(R.id.btnToggleIgnore);
+                Button btnToggleDifficult = coursePopup.findViewById(R.id.btnToggleDifficult);
                 Button btnEdit = coursePopup.findViewById(R.id.btnEdit);
                 Button btnSave = coursePopup.findViewById(R.id.btnSave);
                 Button btnReset = coursePopup.findViewById(R.id.btnReset);
@@ -148,10 +150,67 @@ public class CourseActivity extends AppCompatActivity {
                     }
                 });
 
+                btnToggleIgnore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        def.toggleIgnore();
+                        updateContent(defText, def.toString());
+                    }
+                });
+
+                btnToggleDifficult.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        def.toggleDifficult();
+                        updateContent(defText, def.toString());
+                    }
+                });
+
                 btnEdit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Open popup edit window
+                        AlertDialog.Builder builder = new AlertDialog.Builder(CourseActivity.this);
+                        LayoutInflater inflater = CourseActivity.this.getLayoutInflater();
+                        final View dialogView = inflater.inflate(R.layout.dialog_new_definition, null);
+
+                        final EditText txtDefName = dialogView.findViewById(R.id.txtDefName);
+                        final EditText txtDefDesc = dialogView.findViewById(R.id.txtDefDesc);
+                        final EditText txtDefLevel = dialogView.findViewById(R.id.txtDefLevel);
+
+                        // Set existing fields
+                        txtDefName.setText(def.getName());
+                        txtDefDesc.setText(def.getDescription());
+                        txtDefLevel.setText(def.getLevel());
+
+                        builder.setView(dialogView)
+                                .setTitle("Edit Definition")
+                                .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        // Add new def
+                                        String name = txtDefName.getText().toString();
+                                        if (name.trim().length() <= 0) {
+                                            Toast.makeText(CourseActivity.this,"Definition name cannot be empty",Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+
+                                        def.setName(name);
+                                        def.setDescription(txtDefDesc.getText().toString());
+                                        def.setLevel(txtDefLevel.getText().toString());
+
+                                        refreshView();
+                                        updateContent(defText, def.toString());
+                                        btn.setText(def.getName() + ": " + def.getDescription());
+                                    }
+                                })
+                                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                    }
+                                });
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
                     }
                 });
 
