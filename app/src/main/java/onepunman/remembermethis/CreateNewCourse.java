@@ -41,7 +41,10 @@ public class CreateNewCourse extends AppCompatActivity {
                 if (newCourse.createNew(courseName, courseDescription)) {
                     if (newCourse.save()) {
                         Toast.makeText(CreateNewCourse.this,"Course Created", Toast.LENGTH_SHORT).show();
-                        showAlert("Course Created", "\"" + courseName + "\"" + " has been created" );
+                        UIManager.createConfirmationPopup(CreateNewCourse.this,
+                                "Course Created", "\"" + courseName + "\"" + " has been created", R.drawable.brain,
+                                "OK", null, null,
+                                () -> { finish(); }, null, null);
                     }
                     else {
                         Toast.makeText(CreateNewCourse.this,"Failed to save course", Toast.LENGTH_SHORT).show();
@@ -59,21 +62,5 @@ public class CreateNewCourse extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    private void showAlert(String title, String message) {
-        AlertDialog.Builder msg = new AlertDialog.Builder(this);
-        msg.setMessage(message)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        finish();
-                    }
-                })
-                .setTitle(title)
-                .setIcon(R.drawable.brain)
-                .create();
-        msg.show();
     }
 }

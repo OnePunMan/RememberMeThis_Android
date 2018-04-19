@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -311,26 +310,13 @@ public class CourseActivity extends AppCompatActivity {
                 btnDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        AlertDialog.Builder msg = new AlertDialog.Builder(CourseActivity.this);
-                        msg.setMessage(String.format("Delete \"%1$s\" ? This cannot be undone.", def.getName()))
-                                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        _currentCourse.removeDefinition(def);
-                                        ll.removeView(btn);
-                                        coursePopup.dismiss();
-                                    }
-                                })
-                                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setTitle("Delete Definition")
-                                .setIcon(R.drawable.brain)
-                                .create();
-                        msg.show();
+                        UIManager.createConfirmationPopup(CourseActivity.this,"Delete Definition", String.format("Delete \"%1$s\" ? This cannot be undone.", def.getName()), R.drawable.brain,
+                                "YES", "NO", null,
+                                () -> {
+                                    _currentCourse.removeDefinition(def);
+                                    ll.removeView(btn);
+                                    coursePopup.dismiss();
+                        }, null, null);
                     }
                 });
 
@@ -368,26 +354,8 @@ public class CourseActivity extends AppCompatActivity {
     }
 
     private void showDeleteConfirmation () {
-        AlertDialog.Builder msg = new AlertDialog.Builder(this);
-        msg.setMessage("Delete this course? This cannot be undone.")
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Delete course here
-                        _currentCourseFile.delete();
-                        dialog.dismiss();
-                        finish();
-                    }
-                })
-                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .setTitle("Delete Course")
-                .setIcon(R.drawable.brain)
-                .create();
-        msg.show();
+        UIManager.createConfirmationPopup(this,"Delete course", "Delete this course? This cannot be undone.", R.drawable.brain,
+                "YES", "NO", null,
+                () -> {_currentCourseFile.delete(); finish(); }, null, null);
     }
 }
