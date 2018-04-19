@@ -15,14 +15,13 @@ import java.util.regex.Pattern;
 public class Course {
     final String TAG = "Debug";
     public final static String DELIMITER = "|";
-    public final static String EMPTY_COURSE_DESC_PLACEHOLDER = "<No Description>";
+    public final static String EMPTY_COURSE_DESC_PLACEHOLDER = "<No Course Description>";
 
     private String _id;
     private String _name;
     private String _description;
     private File _courseFile;
     private ArrayList<Definition> _definitions;
-    private ArrayList<Definition> _difficultDefinitions;
 
     public Course() {
         this._id = null;
@@ -30,7 +29,6 @@ public class Course {
         this._description = null;
         this._courseFile = null;
         this._definitions = new ArrayList<Definition>();
-        this._difficultDefinitions = new ArrayList<Definition>();
     }
 
     // Getters
@@ -41,8 +39,11 @@ public class Course {
 
     // Setters
     public boolean setName(String newName) {
-        if (newName == null || newName.trim().isEmpty()) return false;
-        _name = newName;
+        if (newName == null || newName.trim().isEmpty() || _name.equals(newName.trim())) return false;
+        _name = newName.trim();
+        File oldCourseFile = _courseFile;
+        _courseFile = FileIO.writeToFile(_name, null);
+        oldCourseFile.delete();
         return true;
     }
 
@@ -56,9 +57,9 @@ public class Course {
     }
 
     public boolean createNew(String name, String description){
-        if (name == null || name.trim().length() <= 0) return false;
-        _name = name;
-        _description = (description == null|| description.length() <= 0) ? EMPTY_COURSE_DESC_PLACEHOLDER : description;
+        if (name == null || name.trim().isEmpty()) return false;
+        _name = name.trim();
+        _description = (description == null|| description.trim().isEmpty()) ? EMPTY_COURSE_DESC_PLACEHOLDER : description.trim();
         return true;
     }
 
@@ -122,9 +123,11 @@ public class Course {
             }
             reader.close();
 
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             Log.e(TAG, e.getMessage());
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             Log.e(TAG, "Other Error: ", e);
         }
         finally{
@@ -132,7 +135,7 @@ public class Course {
                 if (fStream != null)
                     fStream.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(TAG, "IOError from fStream: ", e);
             }
         }
     }
@@ -167,7 +170,7 @@ public class Course {
     }
 
     public boolean save() {
-        if (_name == null || _name.trim().length() <= 0) {
+        if (_name == null || _name.trim().isEmpty()) {
             Log.e(TAG, "Unable to save, course is in an invalid state.");
             return false;
         }
@@ -232,7 +235,7 @@ public class Course {
     public ArrayList<Definition> getReviewList(String level) {
         ArrayList<Definition> reviewList = new ArrayList<>();
         for (Definition def : _definitions) {
-            if ((def.isReviewTime() || def.isLowCorrectRate()) && !def.isIgnore()) {
+            if ((level == null || def.getLevel().equals(level)) && (def.isReviewTime() || def.isLowCorrectRate()) && !def.isIgnore()) {
                 reviewList.add(def);
             }
         }
@@ -240,6 +243,21 @@ public class Course {
     }
 
     public ArrayList<Definition> getDifficultDefinitions() {
-        return _difficultDefinitions;
+        ArrayList<Definition> difficultList = new ArrayList<>();
+        for (Definition def : _definitions) {
+            if (def.isDifficult()) {
+                difficultList.add(def);
+            }
+        }
+        return difficultList;
+    }
+
+    public boolean containsDefinition(String newDef) {
+        if (newDef == null) return false;
+        String newDefTrimmed = newDef.trim();
+        for (Definition def : _definitions) {
+            if (def.getName().equals(newDefTrimmed)) return true;
+        }
+        return false;
     }
 }

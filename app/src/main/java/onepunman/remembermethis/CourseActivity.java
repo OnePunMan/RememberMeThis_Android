@@ -3,8 +3,10 @@ package onepunman.remembermethis;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,16 +70,20 @@ public class CourseActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 // Add new def
-                                String name = txtDefName.getText().toString();
-                                if (name.trim().length() <= 0) {
+                                String name = txtDefName.getText().toString().trim();
+                                if (name.isEmpty()) {
                                     Toast.makeText(CourseActivity.this,"Definition name cannot be empty",Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                else if (_currentCourse.containsDefinition(name)) {
+                                    Toast.makeText(CourseActivity.this,"This definition already exists",Toast.LENGTH_SHORT).show();
                                     return;
                                 }
 
                                 Definition newDef = new Definition(
-                                        txtDefName.getText().toString(),
-                                        txtDefDesc.getText().toString(),
-                                        txtDefLevel.getText().toString());
+                                        name,
+                                        txtDefDesc.getText().toString().trim(),
+                                        txtDefLevel.getText().toString().trim());
                                 _currentCourse.addDefinition(newDef);
                                 addDefButton(newDef);
                                 updateReviewButton();
@@ -118,13 +124,13 @@ public class CourseActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 // Make sure new name is not empty
-                                String name = txtCourseName.getText().toString();
-                                if (name.trim().length() <= 0) {
+                                String name = txtCourseName.getText().toString().trim();
+                                if (name.isEmpty()) {
                                     Toast.makeText(CourseActivity.this,"Course name cannot be empty",Toast.LENGTH_SHORT).show();
                                     return;
                                 }
 
-                                if (FileIO.isAlreadyExist(name)) {
+                                if (!_currentCourse.getName().equals(name) && FileIO.isAlreadyExist(name)) {
                                     Toast.makeText(CourseActivity.this,"This course already exists",Toast.LENGTH_SHORT).show();
                                     return;
                                 }
@@ -147,7 +153,13 @@ public class CourseActivity extends AppCompatActivity {
                                 dialogInterface.dismiss();
                             }
                         });
-                AlertDialog dialog = builder.create();
+                final AlertDialog dialog = builder.create();
+                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialogInterface) {
+                        dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.RED);
+                    }
+                });
                 dialog.show();
             }
         });
@@ -193,6 +205,7 @@ public class CourseActivity extends AppCompatActivity {
 
                 updateContent(defText, def.toString());
 
+                btnAddWin.setTextColor(Color.GREEN);
                 btnAddWin.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -201,6 +214,7 @@ public class CourseActivity extends AppCompatActivity {
                     }
                 });
 
+                btnAddLoss.setTextColor(Color.YELLOW);
                 btnAddLoss.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -247,9 +261,13 @@ public class CourseActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         // Add new def
-                                        String name = txtDefName.getText().toString();
-                                        if (name.trim().length() <= 0) {
+                                        String name = txtDefName.getText().toString().trim();
+                                        if (name.isEmpty()) {
                                             Toast.makeText(CourseActivity.this,"Definition name cannot be empty",Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                        else if (!def.getName().equals(name) && _currentCourse.containsDefinition(name)) {
+                                            Toast.makeText(CourseActivity.this,"Another definition with this name already exists",Toast.LENGTH_SHORT).show();
                                             return;
                                         }
 
@@ -288,12 +306,31 @@ public class CourseActivity extends AppCompatActivity {
                     }
                 });
 
+
+                btnDelete.setTextColor(Color.RED);
                 btnDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        _currentCourse.removeDefinition(def);
-                        ll.removeView(btn);
-                        coursePopup.dismiss();
+                        AlertDialog.Builder msg = new AlertDialog.Builder(CourseActivity.this);
+                        msg.setMessage(String.format("Delete \"%1$s\" ? This cannot be undone.", def.getName()))
+                                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        _currentCourse.removeDefinition(def);
+                                        ll.removeView(btn);
+                                        coursePopup.dismiss();
+                                    }
+                                })
+                                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setTitle("Delete Definition")
+                                .setIcon(R.drawable.brain)
+                                .create();
+                        msg.show();
                     }
                 });
 

@@ -29,16 +29,22 @@ public class CreateNewCourse extends AppCompatActivity {
         final Button create_button = findViewById(R.id.btn_create);
         create_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String courseName = course_name_text.getText().toString();
-                String courseDescription = course_description_text.getText().toString();
+                String courseName = course_name_text.getText().toString().trim();
+                String courseDescription = course_description_text.getText().toString().trim();
+
+                if (FileIO.isAlreadyExist(courseName)) {
+                    Toast.makeText(CreateNewCourse.this,"Course already exists, please use another name",Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 Course newCourse = new Course();
                 if (newCourse.createNew(courseName, courseDescription)) {
                     if (newCourse.save()) {
-                        Toast.makeText(CreateNewCourse.this,"Course Created",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreateNewCourse.this,"Course Created", Toast.LENGTH_SHORT).show();
                         showAlert("Course Created", "\"" + courseName + "\"" + " has been created" );
-                    } else {
-                        Toast.makeText(CreateNewCourse.this,"Failed to save course",Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Toast.makeText(CreateNewCourse.this,"Failed to save course", Toast.LENGTH_SHORT).show();
                     }
                 }
                 else {
@@ -69,6 +75,5 @@ public class CreateNewCourse extends AppCompatActivity {
                 .setIcon(R.drawable.brain)
                 .create();
         msg.show();
-
     }
 }

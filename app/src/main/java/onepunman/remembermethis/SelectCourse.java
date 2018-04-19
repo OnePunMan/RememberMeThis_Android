@@ -22,15 +22,34 @@ public class SelectCourse extends AppCompatActivity {
 
         ll = findViewById(R.id.courseLayout);
 
-        final Button exit_button = findViewById(R.id.btn_back);
-        exit_button.setOnClickListener(new View.OnClickListener() {
+        final Button btnBack = findViewById(R.id.btn_back);
+        btnBack.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 finish();
             }
         });
 
-        final File [] courseFiles = FileIO.getCourseFiles();
+        final Button btnCreateNewCourse = findViewById(R.id.btnCreateNewCourse);
+        btnCreateNewCourse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(SelectCourse.this, CreateNewCourse.class);
+                startActivity(i);
+            }
+        });
 
+        updateContent();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        updateContent();
+    }
+
+    private void updateContent() {
+        ll.removeAllViews();
+        final File [] courseFiles = FileIO.getCourseFiles();
         if (courseFiles == null || courseFiles.length <= 0) {
             Log.d(TAG, "No Courses");
             return;
@@ -38,7 +57,7 @@ public class SelectCourse extends AppCompatActivity {
 
         Button btn;
         int count = 1;
-        for (int i = 0; i < courseFiles.length; i++){
+        for (int i = 0; i < courseFiles.length; i++) {
             final String fileName = courseFiles[i].getName();
             if (fileName.endsWith(".course")) {
                 btn = new Button(this);
@@ -58,16 +77,5 @@ public class SelectCourse extends AppCompatActivity {
                 });
             }
         }
-
-        // Debugging only
-        /*
-        for (int i = 0; i < 0; i++) {
-            btn = new Button(this);
-            btn.setText("TEST");
-            btn.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            ll.addView(btn);
-        }
-        */
     }
-
 }

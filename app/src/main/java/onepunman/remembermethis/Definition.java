@@ -11,7 +11,7 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.lang.Math.round;
 
-public class Definition implements Serializable {
+public class Definition {
     final static String TAG = "Debug";
     public final static String NOT_TESTED = "Not Tested Yet";
     public final static String EMPTY_DESC_PLACEHOLDER = "<No Description>";
@@ -117,26 +117,26 @@ public class Definition implements Serializable {
 
     // Setters
     public boolean setName (String newName) {
-        if (newName == null || newName.length() <= 0) return false;
-        _name = newName;
+        if (newName == null || newName.trim().isEmpty()) return false;
+        _name = newName.trim();
         return true;
     }
 
     public boolean setDescription (String newDesc) {
-        if (newDesc == null || newDesc.length() <= 0) {
+        if (newDesc == null || newDesc.trim().isEmpty()) {
             _description = EMPTY_DESC_PLACEHOLDER;
             return false;
         }
-        _description = newDesc;
+        _description = newDesc.trim();
         return true;
     }
 
     public boolean setLevel (String newLevel) {
-        if (newLevel == null || newLevel.length() <= 0) {
+        if (newLevel == null || newLevel.trim().isEmpty()) {
             _level = EMPTY_LEVEL_PLACEHOLDER;
             return false;
         }
-        _level = newLevel;
+        _level = newLevel.trim();
         return true;
     }
 
@@ -164,7 +164,7 @@ public class Definition implements Serializable {
     public String formatNextReviewTime (){
         double hours = (double)nextReviewTime() / Definition.SECONDS_PER_HOUR;
 
-        if (hours < Definition.HOURS_PER_DAY) {
+        if (hours <= Definition.HOURS_PER_DAY) {
             //long roundedHours = max(round(hours * 10.0) / 10, 0);
             return String.format("%1$.1f %2$2s", max(hours, 0), hours == 1 ? "hour" : "hours");
         }
