@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.view.View;
 import android.widget.Toast;
 
-import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "Main";
@@ -27,28 +26,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         final Button exit_button = findViewById(R.id.btn_exit);
-        exit_button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                finish();
-                System.exit(0);
-            }
+        exit_button.setOnClickListener(v -> {
+            finish();
+            System.exit(0);
         });
 
         final Button view_course_button = findViewById(R.id.btn_view_courses);
-        view_course_button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, SelectCourse.class);
-                startActivity(i);
-            }
+        view_course_button.setOnClickListener(v -> {
+            Intent i = new Intent(MainActivity.this, SelectCourse.class);
+            startActivity(i);
         });
 
 
         final Button new_course_button = findViewById(R.id.btn_create_new_course);
-        new_course_button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, CreateNewCourse.class);
-                startActivity(i);
-            }
+        new_course_button.setOnClickListener(v -> {
+            Intent i = new Intent(MainActivity.this, CreateNewCourse.class);
+            startActivity(i);
         });
 
         if (ContextCompat.checkSelfPermission(MainActivity.this,
@@ -70,18 +63,8 @@ public class MainActivity extends AppCompatActivity {
             new AlertDialog.Builder(this)
                     .setTitle("Permission Needed")
                     .setMessage("You denied the permission last time, we need permission to save and load course files, grant?")
-                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
-                        }
-                    })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    })
+                    .setPositiveButton("Ok", (dialogInterface, i) -> ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE))
+                    .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss())
                     .create()
                     .show();
         }

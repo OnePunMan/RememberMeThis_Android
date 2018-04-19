@@ -2,7 +2,6 @@ package onepunman.remembermethis;
 
 import android.util.Log;
 
-import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,7 +14,7 @@ public class Definition {
     final static String TAG = "Debug";
     public final static String NOT_TESTED = "Not Tested Yet";
     public final static String EMPTY_DESC_PLACEHOLDER = "<No Description>";
-    public final static String EMPTY_LEVEL_PLACEHOLDER = "No Level";
+    public final static String EMPTY_LEVEL_PLACEHOLDER = "<No Level>";
     public final static String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public final static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(TIME_FORMAT);
     public final static int SECONDS_PER_HOUR = 3600;

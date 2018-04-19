@@ -235,7 +235,10 @@ public class Course {
     public ArrayList<Definition> getReviewList(String level) {
         ArrayList<Definition> reviewList = new ArrayList<>();
         for (Definition def : _definitions) {
-            if ((level == null || def.getLevel().equals(level)) && (def.isReviewTime() || def.isLowCorrectRate()) && !def.isIgnore()) {
+            if (
+                    (level == null || def.getLevel().equals(level)) &&
+                    (def.isReviewTime() || def.isLowCorrectRate() || def.isDifficult()) &&
+                    !def.isIgnore()) {
                 reviewList.add(def);
             }
         }

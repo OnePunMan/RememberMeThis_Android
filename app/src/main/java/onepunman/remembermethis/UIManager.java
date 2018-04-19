@@ -15,35 +15,26 @@ public class UIManager {
         msg.setIcon(icon);
 
         if (positiveButtonText != null) {
-            msg.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if (onPositiveClicked != null) {
-                        onPositiveClicked.run();
-                    }
+            msg.setPositiveButton(positiveButtonText, (dialog, which) -> {
+                if (onPositiveClicked != null) {
+                    onPositiveClicked.run();
                 }
             });
         }
 
         if (negativeButtonText != null) {
-            msg.setNegativeButton(negativeButtonText, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if (onNegativeClicked != null) {
-                        onNegativeClicked.run();
-                    }
-                    dialog.dismiss();
+            msg.setNegativeButton(negativeButtonText, (dialog, which) -> {
+                if (onNegativeClicked != null) {
+                    onNegativeClicked.run();
                 }
+                dialog.dismiss();
             });
         }
 
         if (neutralButtonText != null) {
-            msg.setNeutralButton(neutralButtonText, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if (onNeutralClicked != null) {
-                        onNeutralClicked.run();
-                    }
+            msg.setNeutralButton(neutralButtonText, (dialog, which) -> {
+                if (onNeutralClicked != null) {
+                    onNeutralClicked.run();
                 }
             });
         }

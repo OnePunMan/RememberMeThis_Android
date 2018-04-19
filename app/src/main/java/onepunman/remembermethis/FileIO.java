@@ -1,18 +1,17 @@
-package onepunman.remembermethis;import android.content.Context;
+package onepunman.remembermethis;
+
+import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-
 
 public class FileIO {
     final static String appDirectory = File.separator + "RememberMeThis";
@@ -20,7 +19,7 @@ public class FileIO {
     final static String basePath = Environment.getExternalStorageDirectory().getAbsolutePath();
     final static String COURSES_PATH = basePath + appDirectory  + courseDirectory;
     final static String COURSE_EXTENSION = ".course";
-    private final static String TAG = "Debug"; //FileIO.class.getName();
+    private final static String TAG = "Debug";
 
     public static void initDirectory () {
         File rootDir = new File(basePath + appDirectory);
@@ -105,9 +104,11 @@ public class FileIO {
                 inputStream.close();
                 ret = stringBuilder.toString();
             }
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e) {
             Log.e(TAG, "File not found: ", e);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             Log.e(TAG, "Can not read file: ", e);
         }
         return ret;
@@ -118,7 +119,8 @@ public class FileIO {
             String goodName = fileName.contains(COURSE_EXTENSION) ? fileName : fileName + COURSE_EXTENSION;
             File temp = new File(COURSES_PATH + File.separator + goodName);
             return temp.exists();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             Log.e(TAG, "Error opening new file: ", e);
             return false;
         }

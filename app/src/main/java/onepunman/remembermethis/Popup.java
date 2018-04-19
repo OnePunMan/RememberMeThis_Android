@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+@Deprecated
 public class Popup extends AppCompatActivity {
     final static String TAG = "Debug";
     public final static double SCALE_HEIGHT = 1;
@@ -44,25 +45,10 @@ public class Popup extends AppCompatActivity {
         }
 
 
-        btnUpdateTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _currentDef.updateTime();
-            }
-        });
+        btnUpdateTime.setOnClickListener(v -> _currentDef.updateTime());
 
-        btnAddWin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _currentDef.updateReviewed(true, false);
-            }
-        });
+        btnAddWin.setOnClickListener(v -> _currentDef.updateReviewed(true, false));
 
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        btnSave.setOnClickListener(view -> finish());
     }
 }

@@ -23,19 +23,12 @@ public class SelectCourse extends AppCompatActivity {
         ll = findViewById(R.id.courseLayout);
 
         final Button btnBack = findViewById(R.id.btn_back);
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        btnBack.setOnClickListener(v -> finish());
 
         final Button btnCreateNewCourse = findViewById(R.id.btnCreateNewCourse);
-        btnCreateNewCourse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(SelectCourse.this, CreateNewCourse.class);
-                startActivity(i);
-            }
+        btnCreateNewCourse.setOnClickListener(view -> {
+            Intent i = new Intent(SelectCourse.this, CreateNewCourse.class);
+            startActivity(i);
         });
 
         updateContent();
@@ -67,13 +60,10 @@ public class SelectCourse extends AppCompatActivity {
                 count += 1;
                 final int fileNum = i;
 
-                btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent j = new Intent(SelectCourse.this, CourseActivity.class);
-                        j.putExtra("courseFile", courseFiles[fileNum]);
-                        startActivity(j);
-                    }
+                btn.setOnClickListener(view -> {
+                    Intent j = new Intent(SelectCourse.this, CourseActivity.class);
+                    j.putExtra("courseFile", courseFiles[fileNum]);
+                    startActivity(j);
                 });
             }
         }

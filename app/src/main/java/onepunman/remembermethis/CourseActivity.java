@@ -45,138 +45,108 @@ public class CourseActivity extends AppCompatActivity {
         init(f);
 
         ArrayList<Definition> definitions = _currentCourse.getAll();
-        ArrayList<Definition> reviewList = _currentCourse.getReviewList();
 
         for (final Definition def : definitions) {
             addDefButton(def);
         }
 
         btnAddDefinition = findViewById(R.id.btnAddDef);
-        btnAddDefinition.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(CourseActivity.this);
-                LayoutInflater inflater = CourseActivity.this.getLayoutInflater();
-                final View dialogView = inflater.inflate(R.layout.dialog_new_definition, null);
+        btnAddDefinition.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(CourseActivity.this);
+            LayoutInflater inflater = CourseActivity.this.getLayoutInflater();
+            final View dialogView = inflater.inflate(R.layout.dialog_new_definition, null);
 
-                final EditText txtDefName = dialogView.findViewById(R.id.txtDefName);
-                final EditText txtDefDesc = dialogView.findViewById(R.id.txtDefDesc);
-                final EditText txtDefLevel = dialogView.findViewById(R.id.txtDefLevel);
+            final EditText txtDefName = dialogView.findViewById(R.id.txtDefName);
+            final EditText txtDefDesc = dialogView.findViewById(R.id.txtDefDesc);
+            final EditText txtDefLevel = dialogView.findViewById(R.id.txtDefLevel);
 
-                builder.setView(dialogView)
-                        .setTitle("Add New Definition")
-                        .setPositiveButton(R.string.create, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                // Add new def
-                                String name = txtDefName.getText().toString().trim();
-                                if (name.isEmpty()) {
-                                    Toast.makeText(CourseActivity.this,"Definition name cannot be empty",Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-                                else if (_currentCourse.containsDefinition(name)) {
-                                    Toast.makeText(CourseActivity.this,"This definition already exists",Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
+            builder.setView(dialogView)
+                    .setTitle("Add New Definition")
+                    .setPositiveButton(R.string.create, (dialogInterface, i) -> {
+                        // Add new def
+                        String name = txtDefName.getText().toString().trim();
+                        if (name.isEmpty()) {
+                            Toast.makeText(CourseActivity.this, "Definition name cannot be empty", Toast.LENGTH_SHORT).show();
+                            return;
+                        } else if (_currentCourse.containsDefinition(name)) {
+                            Toast.makeText(CourseActivity.this, "This definition already exists", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
-                                Definition newDef = new Definition(
-                                        name,
-                                        txtDefDesc.getText().toString().trim(),
-                                        txtDefLevel.getText().toString().trim());
-                                _currentCourse.addDefinition(newDef);
-                                addDefButton(newDef);
-                                updateReviewButton();
-                            }
-                        })
-                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        });
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
+                        Definition newDef = new Definition(
+                                name,
+                                txtDefDesc.getText().toString().trim(),
+                                txtDefLevel.getText().toString().trim());
+                        _currentCourse.addDefinition(newDef);
+                        addDefButton(newDef);
+                        updateReviewButton();
+                    })
+                    .setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.dismiss());
+            AlertDialog dialog = builder.create();
+            dialog.show();
         });
 
         btnEditCourse = findViewById(R.id.btnEditCourse);
-        btnEditCourse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnEditCourse.setOnClickListener(v -> {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(CourseActivity.this);
-                LayoutInflater inflater = CourseActivity.this.getLayoutInflater();
-                final View dialogView = inflater.inflate(R.layout.dialog_new_definition, null);
+            AlertDialog.Builder builder = new AlertDialog.Builder(CourseActivity.this);
+            LayoutInflater inflater = CourseActivity.this.getLayoutInflater();
+            final View dialogView = inflater.inflate(R.layout.dialog_new_definition, null);
 
-                final EditText txtCourseName = dialogView.findViewById(R.id.txtDefName);
-                final EditText txtCourseDesc = dialogView.findViewById(R.id.txtDefDesc);
+            final EditText txtCourseName = dialogView.findViewById(R.id.txtDefName);
+            final EditText txtCourseDesc = dialogView.findViewById(R.id.txtDefDesc);
 
-                dialogView.findViewById(R.id.txtDefLevel).setVisibility(View.GONE);
+            dialogView.findViewById(R.id.txtDefLevel).setVisibility(View.GONE);
 
-                // Set existing fields
-                txtCourseName.setText(_currentCourse.getName());
-                txtCourseDesc.setText(_currentCourse.getDescription());
+            // Set existing fields
+            txtCourseName.setText(_currentCourse.getName());
+            txtCourseDesc.setText(_currentCourse.getDescription());
 
-                builder.setView(dialogView)
-                        .setTitle("Edit Course")
-                        .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                // Make sure new name is not empty
-                                String name = txtCourseName.getText().toString().trim();
-                                if (name.isEmpty()) {
-                                    Toast.makeText(CourseActivity.this,"Course name cannot be empty",Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
+            builder.setView(dialogView)
+                    .setTitle("Edit Course")
+                    .setPositiveButton(R.string.save, (dialogInterface, i) -> {
+                        // Make sure new name is not empty
+                        String name = txtCourseName.getText().toString().trim();
+                        if (name.isEmpty()) {
+                            Toast.makeText(CourseActivity.this, "Course name cannot be empty", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
-                                if (!_currentCourse.getName().equals(name) && FileIO.isAlreadyExist(name)) {
-                                    Toast.makeText(CourseActivity.this,"This course already exists",Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
+                        if (!_currentCourse.getName().toLowerCase().equals(name.toLowerCase()) && FileIO.isAlreadyExist(name)) {
+                            Toast.makeText(CourseActivity.this, "This course already exists", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
-                                _currentCourse.setName(name);
-                                _currentCourse.setDescription(txtCourseDesc.getText().toString());
+                        _currentCourse.setName(name);
+                        _currentCourse.setDescription(txtCourseDesc.getText().toString());
 
-                                updateCourseHeader();
-                            }
-                        })
-                        .setNeutralButton(R.string.delete, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                showDeleteConfirmation();
-                            }
-                        })
-                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        });
-                final AlertDialog dialog = builder.create();
-                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                    @Override
-                    public void onShow(DialogInterface dialogInterface) {
-                        dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.RED);
-                    }
-                });
-                dialog.show();
-            }
+                        updateCourseHeader();
+                    })
+                    .setNeutralButton(R.string.delete, (dialog, which) -> showDeleteConfirmation())
+                    .setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.dismiss());
+            final AlertDialog dialog = builder.create();
+            dialog.setOnShowListener(dialogInterface -> dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.RED));
+            dialog.show();
         });
 
         backButton = findViewById(R.id.btn_back);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                _currentCourse.save();
-                finish();
-            }
+        backButton.setOnClickListener(v -> {
+            _currentCourse.save();
+            finish();
         });
 
         btnReview = findViewById(R.id.btnReview);
         updateReviewButton();
-        btnReview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Review Stuff
+        btnReview.setOnClickListener(v -> {
+            // Review Stuff
+            ArrayList<Definition> reviewList = _currentCourse.getReviewList();
+            if (reviewList.isEmpty()) {
+                UIManager.createConfirmationPopup(CourseActivity.this,
+                        "Nothing to Review", "You currently have nothing to review.", R.drawable.brain,
+                        "OK", null, null, null, null, null);
+            }
+            else {
+                // Start review
             }
         });
     }
@@ -185,149 +155,112 @@ public class CourseActivity extends AppCompatActivity {
         final Button btn = new Button(this);
         btn.setText(def.getName() + ": " + def.getDescription());
         btn.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Dialog coursePopup = new Dialog(CourseActivity.this);
+        btn.setOnClickListener(v -> {
+            final Dialog coursePopup = new Dialog(CourseActivity.this);
 
-                coursePopup.setContentView(R.layout.activity_popup);
+            coursePopup.setContentView(R.layout.activity_popup);
 
-                final TextView defText = coursePopup.findViewById(R.id.lblDefText);
-                Button btnAddWin = coursePopup.findViewById(R.id.btnAddWin);
-                Button btnAddLoss = coursePopup.findViewById(R.id.btnAddLose);
-                Button btnToggleIgnore = coursePopup.findViewById(R.id.btnToggleIgnore);
-                Button btnToggleDifficult = coursePopup.findViewById(R.id.btnToggleDifficult);
-                Button btnEdit = coursePopup.findViewById(R.id.btnEdit);
-                Button btnSave = coursePopup.findViewById(R.id.btnSave);
-                Button btnReset = coursePopup.findViewById(R.id.btnReset);
-                Button btnDelete = coursePopup.findViewById(R.id.btnDelete);
+            final TextView defText = coursePopup.findViewById(R.id.lblDefText);
+            Button btnAddWin = coursePopup.findViewById(R.id.btnAddWin);
+            Button btnAddLoss = coursePopup.findViewById(R.id.btnAddLose);
+            Button btnToggleIgnore = coursePopup.findViewById(R.id.btnToggleIgnore);
+            Button btnToggleDifficult = coursePopup.findViewById(R.id.btnToggleDifficult);
+            Button btnEdit = coursePopup.findViewById(R.id.btnEdit);
+            Button btnSave = coursePopup.findViewById(R.id.btnSave);
+            Button btnReset = coursePopup.findViewById(R.id.btnReset);
+            Button btnDelete = coursePopup.findViewById(R.id.btnDelete);
 
+            updateContent(defText, def.toString());
+
+            btnAddWin.setTextColor(Color.GREEN);
+            btnAddWin.setOnClickListener(view -> {
+                def.updateReviewed(true, true);
                 updateContent(defText, def.toString());
+            });
 
-                btnAddWin.setTextColor(Color.GREEN);
-                btnAddWin.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        def.updateReviewed(true, true);
-                        updateContent(defText, def.toString());
-                    }
-                });
+            btnAddLoss.setTextColor(Color.YELLOW);
+            btnAddLoss.setOnClickListener(view -> {
+                def.updateReviewed(false, true);
+                updateContent(defText, def.toString());
+            });
 
-                btnAddLoss.setTextColor(Color.YELLOW);
-                btnAddLoss.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        def.updateReviewed(false, true);
-                        updateContent(defText, def.toString());
-                    }
-                });
+            btnToggleIgnore.setOnClickListener(v14 -> {
+                def.toggleIgnore();
+                updateContent(defText, def.toString());
+            });
 
-                btnToggleIgnore.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        def.toggleIgnore();
-                        updateContent(defText, def.toString());
-                    }
-                });
+            btnToggleDifficult.setOnClickListener(v13 -> {
+                def.toggleDifficult();
+                updateContent(defText, def.toString());
+            });
 
-                btnToggleDifficult.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        def.toggleDifficult();
-                        updateContent(defText, def.toString());
-                    }
-                });
+            btnEdit.setOnClickListener(v12 -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(CourseActivity.this);
+                LayoutInflater inflater = CourseActivity.this.getLayoutInflater();
+                final View dialogView = inflater.inflate(R.layout.dialog_new_definition, null);
 
-                btnEdit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(CourseActivity.this);
-                        LayoutInflater inflater = CourseActivity.this.getLayoutInflater();
-                        final View dialogView = inflater.inflate(R.layout.dialog_new_definition, null);
+                final EditText txtDefName = dialogView.findViewById(R.id.txtDefName);
+                final EditText txtDefDesc = dialogView.findViewById(R.id.txtDefDesc);
+                final EditText txtDefLevel = dialogView.findViewById(R.id.txtDefLevel);
 
-                        final EditText txtDefName = dialogView.findViewById(R.id.txtDefName);
-                        final EditText txtDefDesc = dialogView.findViewById(R.id.txtDefDesc);
-                        final EditText txtDefLevel = dialogView.findViewById(R.id.txtDefLevel);
+                // Set existing fields
+                txtDefName.setText(def.getName());
 
-                        // Set existing fields
-                        txtDefName.setText(def.getName());
-                        txtDefDesc.setText(def.getDescription());
-                        txtDefLevel.setText(def.getLevel());
+                String desc = def.getDescription();
+                txtDefDesc.setText(desc.equals(Definition.EMPTY_DESC_PLACEHOLDER) ? null : desc);
 
-                        builder.setView(dialogView)
-                                .setTitle("Edit Definition")
-                                .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        // Add new def
-                                        String name = txtDefName.getText().toString().trim();
-                                        if (name.isEmpty()) {
-                                            Toast.makeText(CourseActivity.this,"Definition name cannot be empty",Toast.LENGTH_SHORT).show();
-                                            return;
-                                        }
-                                        else if (!def.getName().equals(name) && _currentCourse.containsDefinition(name)) {
-                                            Toast.makeText(CourseActivity.this,"Another definition with this name already exists",Toast.LENGTH_SHORT).show();
-                                            return;
-                                        }
+                String lvl = def.getLevel();
+                txtDefLevel.setText(lvl.equals(Definition.EMPTY_LEVEL_PLACEHOLDER) ? null : lvl);
 
-                                        def.setName(name);
-                                        def.setDescription(txtDefDesc.getText().toString());
-                                        def.setLevel(txtDefLevel.getText().toString());
+                builder.setView(dialogView)
+                        .setTitle("Edit Definition")
+                        .setPositiveButton(R.string.save, (dialogInterface, i) -> {
+                            // Add new def
+                            String name = txtDefName.getText().toString().trim();
+                            if (name.isEmpty()) {
+                                Toast.makeText(CourseActivity.this, "Definition name cannot be empty", Toast.LENGTH_SHORT).show();
+                                return;
+                            } else if (!def.getName().equals(name) && _currentCourse.containsDefinition(name)) {
+                                Toast.makeText(CourseActivity.this, "Another definition with this name already exists", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
 
-                                        updateReviewButton();
-                                        updateContent(defText, def.toString());
-                                        btn.setText(def.getName() + ": " + def.getDescription());
-                                    }
-                                })
-                                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.dismiss();
-                                    }
-                                });
-                        AlertDialog dialog = builder.create();
-                        dialog.show();
-                    }
-                });
+                            def.setName(name);
+                            def.setDescription(txtDefDesc.getText().toString());
+                            def.setLevel(txtDefLevel.getText().toString());
 
-                btnSave.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        coursePopup.dismiss();
-                    }
-                });
+                            updateReviewButton();
+                            updateContent(defText, def.toString());
+                            btn.setText(def.getName() + ": " + def.getDescription());
+                        })
+                        .setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.dismiss());
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            });
 
-                btnReset.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+            btnSave.setOnClickListener(view -> coursePopup.dismiss());
+
+            btnReset.setOnClickListener(view -> UIManager.createConfirmationPopup(CourseActivity.this, "Reset Definition",
+                    String.format("Reset all data for \"%1$s\" ?", def.getName()), R.drawable.brain,
+                    "YES", "CANCEL", null,
+                    () -> {
                         def.reset();
                         updateContent(defText, def.toString());
-                    }
-                });
+                    },
+                    null, null));
 
 
-                btnDelete.setTextColor(Color.RED);
-                btnDelete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        UIManager.createConfirmationPopup(CourseActivity.this,"Delete Definition", String.format("Delete \"%1$s\" ? This cannot be undone.", def.getName()), R.drawable.brain,
-                                "YES", "NO", null,
-                                () -> {
-                                    _currentCourse.removeDefinition(def);
-                                    ll.removeView(btn);
-                                    coursePopup.dismiss();
-                        }, null, null);
-                    }
-                });
+            btnDelete.setTextColor(Color.RED);
+            btnDelete.setOnClickListener(v1 -> UIManager.createConfirmationPopup(CourseActivity.this, "Delete Definition", String.format("Delete \"%1$s\" ? This cannot be undone.", def.getName()), R.drawable.brain,
+                    "YES", "NO", null,
+                    () -> {
+                        _currentCourse.removeDefinition(def);
+                        ll.removeView(btn);
+                        coursePopup.dismiss();
+                    }, null, null));
 
-                coursePopup.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        updateReviewButton();
-                    }
-                });
-                coursePopup.show();
-            }
+            coursePopup.setOnDismissListener(dialog -> updateReviewButton());
+            coursePopup.show();
         });
         ll.addView(btn);
     }
