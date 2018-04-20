@@ -3,6 +3,7 @@ package onepunman.remembermethis;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -147,6 +148,8 @@ public class CourseActivity extends AppCompatActivity {
             }
             else {
                 // Start review
+                Intent i = new Intent(CourseActivity.this, ReviewActivity.class);
+                startActivity(i);
             }
         });
     }
