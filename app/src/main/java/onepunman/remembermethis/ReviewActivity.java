@@ -8,15 +8,24 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class ReviewActivity extends FragmentActivity {
     final String TAG = "Debug";
+    FragmentManager fm;
 
     private FrameLayout mCardFrame;
+    private TextView mTxtCounter;
+
     private Course _course;
+    private ArrayList<Definition> _reviewList;
+    private ArrayList<Definition> _laterList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +40,8 @@ public class ReviewActivity extends FragmentActivity {
             }
         });
 
+        fm = getFragmentManager();
+
         File f = (File) getIntent().getSerializableExtra("courseFile");
         if (f != null) {
             _course = new Course();
@@ -41,21 +52,86 @@ public class ReviewActivity extends FragmentActivity {
         }
 
         mCardFrame = findViewById(R.id.viewPager);
-        ArrayList<Definition> reviewDefs = _course.getReviewList();
+        mTxtCounter = findViewById(R.id.txtRemaining);
 
-        FragmentManager fm = getFragmentManager();
+        _reviewList = _course.getReviewList();
+        Collections.shuffle(_reviewList);
+
+        _laterList = new ArrayList<>();
+        updateDefCount();
+
         FragmentTransaction fs = fm.beginTransaction();
 
-        for (Definition def : reviewDefs) {
-            CardStackFragment newCard = new CardStackFragment();
-            newCard.setDefinition(def);
-            fs.add(mCardFrame.getId(), newCard, def.getName());
+        for (Definition def : _reviewList) {
+            addCard(def);
         }
 
         fs.commit();
     }
 
-    public void removeCard(CardStackFragment card) {
-        getFragmentManager().beginTransaction().remove(card).commit();
+    private void addCard(Definition def) {
+        FragmentTransaction fs = fm.beginTransaction();
+
+        CardStackFragment newCard = new CardStackFragment();
+        newCard.setDefinition(def);
+
+        fs.add(mCardFrame.getId(), newCard, def.getName());
+        fs.commit();
+    }
+
+    public void removeCard(CardStackFragment card, Definition def, boolean checkFinish) {
+        fm.beginTransaction().remove(card).commit();
+        _reviewList.remove(def);
+
+        if (checkFinish) checkFinish();
+
+        updateDefCount();
+    }
+
+    public void removeCard(CardStackFragment card, Definition def) {
+        removeCard(card, def, true);
+    }
+
+    public void putAtEnd(CardStackFragment card, Definition def) {
+        removeCard(card, def, false);
+        _laterList.add(def);
+
+        checkFinish();
+
+        updateDefCount();
+    }
+
+    private void checkFinish() {
+        if (_reviewList.size() <= 0) {
+            if (_laterList.size() > 0) {
+                for (Definition item : _laterList) {
+                    addCard(item);
+                }
+
+                swapLists();
+            }
+            else
+            {
+                finish();
+            }
+        }
+    }
+
+    public int updateDefCount() {
+        int size = _reviewList.size() + _laterList.size();
+        mTxtCounter.setText(String.format("Remaining: %d", size));
+        return size;
+    }
+
+    public void makeToast(String text) {
+        Toast.makeText(this,text, Toast.LENGTH_SHORT).show();
+    }
+
+    private void swapLists() {
+        ArrayList<Definition> temp = _reviewList;
+        _reviewList = _laterList;
+        _laterList = temp;
+
+        Collections.shuffle(_reviewList);
     }
 }
