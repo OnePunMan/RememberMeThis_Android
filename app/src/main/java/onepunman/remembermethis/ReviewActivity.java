@@ -1,22 +1,22 @@
 package onepunman.remembermethis;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.FrameLayout;
 
-import com.lorentzos.flingswipe.SwipeFlingAdapterView;
-
+import java.io.File;
 import java.util.ArrayList;
 
-public class ReviewActivity extends AppCompatActivity {
+public class ReviewActivity extends FragmentActivity {
+    final String TAG = "Debug";
 
-    private ArrayList<String> al;
-    private ArrayAdapter<String> arrayAdapter;
-    private int i;
+    private FrameLayout mCardFrame;
+    private Course _course;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,64 +31,31 @@ public class ReviewActivity extends AppCompatActivity {
             }
         });
 
-        al = new ArrayList<>();
-        al.add("php");
-        al.add("c");
-        al.add("python");
-        al.add("java");
-        al.add("html");
-        al.add("c++");
-        al.add("css");
-        al.add("javascript");
+        File f = (File) getIntent().getSerializableExtra("courseFile");
+        if (f != null) {
+            _course = new Course();
+            _course.loadFromFile(f);
+        }
+        else {
+            Log.e("Debug", "Failed to start review session");
+        }
 
-        arrayAdapter = new ArrayAdapter<>(this, R.layout.card_item, R.id.helloText, al);
+        mCardFrame = findViewById(R.id.viewPager);
+        ArrayList<Definition> reviewDefs = _course.getReviewList();
 
-        SwipeFlingAdapterView flingContainer = findViewById(R.id.frame);
-        flingContainer.setAdapter(arrayAdapter);
-        flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
-            @Override
-            public void removeFirstObjectInAdapter() {
-                // this is the simplest way to delete an object from the Adapter (/AdapterView)
-                Log.d("LIST", "removed object!");
-                al.remove(0);
-                arrayAdapter.notifyDataSetChanged();
-            }
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction fs = fm.beginTransaction();
 
-            @Override
-            public void onLeftCardExit(Object dataObject) {
-                //Do something on the left!
-                //You also have access to the original object.
-                //If you want to use it just cast it (String) dataObject
-                Toast.makeText(ReviewActivity.this, "left", Toast.LENGTH_SHORT).show();
-            }
+        for (Definition def : reviewDefs) {
+            CardStackFragment newCard = new CardStackFragment();
+            newCard.setDefinition(def);
+            fs.add(mCardFrame.getId(), newCard, def.getName());
+        }
 
-            @Override
-            public void onRightCardExit(Object dataObject) {
-                Toast.makeText(ReviewActivity.this, "right", Toast.LENGTH_SHORT).show();
-            }
+        fs.commit();
+    }
 
-            @Override
-            public void onAdapterAboutToEmpty(int itemsInAdapter) {
-                // Ask for more data here
-                //al.add("XML ".concat(String.valueOf(i)));
-                //arrayAdapter.notifyDataSetChanged();
-                //Log.d("LIST", "notified");
-                //i++;
-            }
-
-            @Override
-            public void onScroll(float scrollProgressPercent) {
-                // empty for now
-            }
-        });
-
-
-        // Optionally add an OnItemClickListener
-        flingContainer.setOnItemClickListener(new SwipeFlingAdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClicked(int itemPosition, Object dataObject) {
-                Toast.makeText(ReviewActivity.this, dataObject.toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
+    public void removeCard(CardStackFragment card) {
+        getFragmentManager().beginTransaction().remove(card).commit();
     }
 }

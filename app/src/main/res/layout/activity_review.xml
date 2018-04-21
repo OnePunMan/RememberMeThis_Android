@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".ReviewActivity">
 
+    <!--
+
     <com.lorentzos.flingswipe.SwipeFlingAdapterView
         android:id="@+id/frame"
         android:background="#ffeee9e2"
@@ -13,8 +15,29 @@
         android:layout_height="match_parent"
         app:rotation_degrees="15.5"
         tools:context=".MyActivity" >
+    </com.lorentzos.flingswipe.SwipeFlingAdapterView> -->
 
-    </com.lorentzos.flingswipe.SwipeFlingAdapterView>
+    <FrameLayout
+        android:id="@+id/viewPager"
+        android:layout_width="300dp"
+        android:layout_height="400dp"
+        android:layout_centerInParent="true">
+
+        <!--
+        <fragment android:name="onepunman.remembermethis.CardStackFragment"
+            android:id="@+id/frag1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" /> -->
+
+
+    </FrameLayout>
+
+    <!--
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="300dp"
+        android:layout_height="400dp"
+        android:layout_centerInParent="true" /> -->
 
 
     <LinearLayout
@@ -23,7 +46,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:orientation="horizontal"
-        android:layout_below="@+id/frame">
+        android:layout_below="@+id/viewPager">
 
         <Button
             android:id="@+id/btnSkip"

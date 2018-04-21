@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="250dp"
-    android:layout_height="350dp"
-    android:layout_gravity="center">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@drawable/card_front">
 
     <TextView
-        android:id="@+id/helloText"
+        android:id="@+id/cardTitle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#E339"
-        android:gravity="center"
-        android:textColor="@android:color/white"
-        android:textSize="40sp"
-        tools:text="@string/app_title" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="72dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="TITLE"
+        android:textSize="24sp"
+        android:textColor="@color/black"/>
 
-    <View
-        android:id="@+id/item_swipe_left_indicator"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_margin="10dp"
-        android:alpha="0"
-        android:background="#A5F" />
+    <TextView
+        android:id="@+id/cardDescription"
+        android:layout_width="match_parent"
+        android:layout_height="375dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="138dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="Description"
+        android:textSize="24sp"
+        android:textColor="@color/black"/>
 
-    <View
-        android:id="@+id/item_swipe_right_indicator"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_gravity="right"
-        android:layout_margin="10dp"
-        android:alpha="0"
-        android:background="#5AF" />
-
-</FrameLayout>
+</RelativeLayout>
