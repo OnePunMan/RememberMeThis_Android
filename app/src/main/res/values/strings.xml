@@ -18,4 +18,5 @@
     <string name="save">Save</string>
     <string name="edit_course">Edit Course</string>
     <string name="delete">Delete</string>
+    <string name="review_all">Review All</string>
 </resources>

@@ -4,17 +4,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class CardStackFragment extends Fragment {
     final String TAG = "Debug";
     private Definition _definition;
+    private boolean _isPractice;
 
     private ReviewActivity parentActivity;
     private TextView mTxtName;
@@ -48,14 +46,14 @@ public class CardStackFragment extends Fragment {
         v.setOnTouchListener(new OnSwipeTouchListener(parentActivity) {
             @Override
             public void onSwipeRight() {
-                _definition.updateReviewed(true, true);
+                if (!_isPractice) _definition.updateReviewed(true, true);
                 parentActivity.makeToast("Nice!");
                 parentActivity.removeCard(CardStackFragment.this, _definition);
             }
 
             @Override
             public void onSwipeLeft() {
-                _definition.updateReviewed(false, true);
+                if (!_isPractice) _definition.updateReviewed(false, true);
                 parentActivity.makeToast("You'll get it next time!");
                 parentActivity.removeCard(CardStackFragment.this, _definition);
             }
@@ -76,7 +74,8 @@ public class CardStackFragment extends Fragment {
         return v;
     }
 
-    public void setDefinition(Definition def) {
+    public void setDefinition(Definition def, boolean advance) {
         _definition = def;
+        _isPractice = advance;
     }
 }

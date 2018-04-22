@@ -26,6 +26,7 @@ public class ReviewActivity extends FragmentActivity {
     private Course _course;
     private ArrayList<Definition> _reviewList;
     private ArrayList<Definition> _laterList;
+    private boolean _reviewAll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +38,7 @@ public class ReviewActivity extends FragmentActivity {
             @Override
             public void onClick(View view) {
                 UIManager.createConfirmationPopup(ReviewActivity.this, "Exit Session", "Do you want to exist this review session? Your progress will be saved.",
-                        R.drawable.brain, "YES", "NO", null, () -> { _course.save(); finish(); }, null, null);
+                        R.drawable.brain, "YES", "NO", null, () -> { saveCourseIfReal(); finish(); }, null, null);
             }
         });
 
@@ -52,10 +53,12 @@ public class ReviewActivity extends FragmentActivity {
             Log.e("Debug", "Failed to start review session");
         }
 
+        _reviewAll = getIntent().getExtras().getBoolean("isAll");
+
         mCardFrame = findViewById(R.id.viewPager);
         mTxtCounter = findViewById(R.id.txtRemaining);
 
-        _reviewList = _course.getReviewList();
+        _reviewList = _reviewAll ? _course.getAll() : _course.getReviewList();
         Collections.shuffle(_reviewList);
 
         _laterList = new ArrayList<>();
@@ -74,7 +77,7 @@ public class ReviewActivity extends FragmentActivity {
         FragmentTransaction fs = fm.beginTransaction();
 
         CardStackFragment newCard = new CardStackFragment();
-        newCard.setDefinition(def);
+        newCard.setDefinition(def, _reviewAll);
 
         fs.add(mCardFrame.getId(), newCard, def.getName());
         fs.commit();
@@ -113,10 +116,7 @@ public class ReviewActivity extends FragmentActivity {
             }
             else
             {
-                for (Definition def : _course.getAll()) {
-                    Log.e(TAG, def.toString());
-                }
-                _course.save();
+                saveCourseIfReal();
                 finish();
             }
         }
@@ -138,5 +138,11 @@ public class ReviewActivity extends FragmentActivity {
         _laterList = temp;
 
         Collections.shuffle(_reviewList);
+    }
+
+    private void saveCourseIfReal() {
+        if (!_reviewAll) {
+            _course.save();
+        }
     }
 }

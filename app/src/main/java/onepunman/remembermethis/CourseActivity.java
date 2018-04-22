@@ -26,6 +26,7 @@ public class CourseActivity extends AppCompatActivity {
 
     Button btnAddDefinition;
     Button btnReview;
+    Button btnReviewAll;
     Button btnEditCourse;
     Button backButton;
 
@@ -147,6 +148,26 @@ public class CourseActivity extends AppCompatActivity {
                 Intent i = new Intent(CourseActivity.this, ReviewActivity.class);
                 i.putExtra("courseFile", _currentCourseFile);
                 startActivity(i);
+            }
+        });
+
+        btnReviewAll = findViewById(R.id.btnReviewAll);
+        btnReviewAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (_currentCourse.getAll().isEmpty()) {
+                    UIManager.createConfirmationPopup(CourseActivity.this,
+                            "Nothing to Review", "This course is empty.", R.drawable.brain,
+                            "OK", null, null, null, null, null);
+                }
+                else {
+                    // Practice review
+                    _currentCourse.save();
+                    Intent i = new Intent(CourseActivity.this, ReviewActivity.class);
+                    i.putExtra("courseFile", _currentCourseFile);
+                    i.putExtra("isAll", true);
+                    startActivity(i);
+                }
             }
         });
     }
