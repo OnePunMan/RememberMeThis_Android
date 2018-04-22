@@ -36,7 +36,8 @@ public class ReviewActivity extends FragmentActivity {
         btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                UIManager.createConfirmationPopup(ReviewActivity.this, "Exit Session", "Do you want to exist this review session? Your progress will be saved.",
+                        R.drawable.brain, "YES", "NO", null, () -> { _course.save(); finish(); }, null, null);
             }
         });
 
@@ -112,6 +113,10 @@ public class ReviewActivity extends FragmentActivity {
             }
             else
             {
+                for (Definition def : _course.getAll()) {
+                    Log.e(TAG, def.toString());
+                }
+                _course.save();
                 finish();
             }
         }

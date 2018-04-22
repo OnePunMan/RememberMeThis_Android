@@ -140,6 +140,11 @@ public class Course {
         }
     }
 
+    public void reload() {
+        _definitions.clear();
+        loadFromFile(_courseFile);
+    }
+
     public ArrayList<Definition> getAll(String level) {
         return _definitions;
     }

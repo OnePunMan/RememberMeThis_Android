@@ -44,11 +44,7 @@ public class CourseActivity extends AppCompatActivity {
         File f = (File) getIntent().getSerializableExtra("courseFile");
         init(f);
 
-        ArrayList<Definition> definitions = _currentCourse.getAll();
-
-        for (final Definition def : definitions) {
-            addDefButton(def);
-        }
+        refreshList();
 
         btnAddDefinition = findViewById(R.id.btnAddDef);
         btnAddDefinition.setOnClickListener(view -> {
@@ -147,11 +143,20 @@ public class CourseActivity extends AppCompatActivity {
             }
             else {
                 // Start review
+                _currentCourse.save();
                 Intent i = new Intent(CourseActivity.this, ReviewActivity.class);
                 i.putExtra("courseFile", _currentCourseFile);
                 startActivity(i);
             }
         });
+    }
+
+    private void refreshList() {
+        ll.removeAllViews();
+        ArrayList<Definition> definitions = _currentCourse.getAll();
+        for (final Definition def : definitions) {
+            addDefButton(def);
+        }
     }
 
     private void addDefButton (final Definition def) {
@@ -293,5 +298,13 @@ public class CourseActivity extends AppCompatActivity {
         UIManager.createConfirmationPopup(this,"Delete course", "Delete this course? This cannot be undone.", R.drawable.brain,
                 "YES", "NO", null,
                 () -> {_currentCourseFile.delete(); finish(); }, null, null);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        _currentCourse.reload();
+        refreshList();
+        updateReviewButton();
     }
 }
