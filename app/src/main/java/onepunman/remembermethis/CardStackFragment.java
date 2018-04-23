@@ -20,10 +20,17 @@ public class CardStackFragment extends Fragment {
     private TextView mTxtName;
     private TextView mTxtDesc;
 
+    private CardFragmentFront _cardFront;
+    private CardFragmentBack _cardBack;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.card_item, null);
+        View v = inflater.inflate(R.layout.card_item_front, null);
+
+        _cardFront = new CardFragmentFront();
+        _cardBack = new CardFragmentBack();
+
 
         // Init data here
         mTxtName = v.findViewById(R.id.cardTitle);
