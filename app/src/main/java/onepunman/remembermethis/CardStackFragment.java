@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.tekle.oss.android.animation.*;
+
 public class CardStackFragment extends Fragment {
     final String TAG = "Debug";
     private Definition _definition;
@@ -46,6 +48,7 @@ public class CardStackFragment extends Fragment {
         v.setOnTouchListener(new OnSwipeTouchListener(parentActivity) {
             @Override
             public void onSwipeRight() {
+                AnimationFactory.fadeOut(v);
                 if (!_isPractice) _definition.updateReviewed(true, true);
                 parentActivity.makeToast("Nice!");
                 parentActivity.removeCard(CardStackFragment.this, _definition);
@@ -53,6 +56,7 @@ public class CardStackFragment extends Fragment {
 
             @Override
             public void onSwipeLeft() {
+                AnimationFactory.fadeOut(v);
                 if (!_isPractice) _definition.updateReviewed(false, true);
                 parentActivity.makeToast("You'll get it next time!");
                 parentActivity.removeCard(CardStackFragment.this, _definition);
@@ -60,12 +64,14 @@ public class CardStackFragment extends Fragment {
 
             @Override
             public void onSwipeTop() {
+                AnimationFactory.fadeOut(v);
                 parentActivity.makeToast("Come back later");
                 parentActivity.putAtEnd(CardStackFragment.this, _definition);
             }
 
             @Override
             public void onSwipeBottom() {
+                AnimationFactory.fadeOut(v);
                 parentActivity.makeToast("Skipped");
                 parentActivity.removeCard(CardStackFragment.this, _definition);
             }

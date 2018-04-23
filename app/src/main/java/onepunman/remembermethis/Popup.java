@@ -29,8 +29,7 @@ public class Popup extends AppCompatActivity {
         defText = findViewById(R.id.lblDefText);
         btnAddLose = findViewById(R.id.btnAddLose);
         btnAddWin = findViewById(R.id.btnAddWin);
-        btnSave = findViewById(R.id.btnSave);
-
+        btnSave = findViewById(R.id.btnBack);
 
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);

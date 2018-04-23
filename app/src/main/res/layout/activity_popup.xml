@@ -74,10 +74,10 @@
             android:text="Delete" />
 
         <Button
-            android:id="@+id/btnSave"
+            android:id="@+id/btnBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save" />
+            android:text="@string/back" />
 
     </android.support.v7.widget.GridLayout>
 </RelativeLayout>

@@ -62,18 +62,25 @@ public class CourseActivity extends AppCompatActivity {
                     .setPositiveButton(R.string.create, (dialogInterface, i) -> {
                         // Add new def
                         String name = txtDefName.getText().toString().trim();
+                        String desc = txtDefDesc.getText().toString().trim();
+                        String level =  txtDefLevel.getText().toString().trim();
+
                         if (name.isEmpty()) {
                             Toast.makeText(CourseActivity.this, "Definition name cannot be empty", Toast.LENGTH_SHORT).show();
                             return;
-                        } else if (_currentCourse.containsDefinition(name)) {
-                            Toast.makeText(CourseActivity.this, "This definition already exists", Toast.LENGTH_SHORT).show();
+                        }
+                        else if (name.contains(Course.DELIMITER) ||
+                                desc.contains(Course.DELIMITER) ||
+                                level.contains(Course.DELIMITER)) {
+                            Toast.makeText(CourseActivity.this, "Definition contains illegal characters", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        else if (_currentCourse.containsDefinition(name)) {
+                            Toast.makeText(CourseActivity.this, "Definition already exists", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
-                        Definition newDef = new Definition(
-                                name,
-                                txtDefDesc.getText().toString().trim(),
-                                txtDefLevel.getText().toString().trim());
+                        Definition newDef = new Definition(name, desc, level);
                         _currentCourse.addDefinition(newDef);
                         addDefButton(newDef);
                         updateReviewButton();
@@ -97,7 +104,9 @@ public class CourseActivity extends AppCompatActivity {
 
             // Set existing fields
             txtCourseName.setText(_currentCourse.getName());
-            txtCourseDesc.setText(_currentCourse.getDescription());
+
+            String desc = _currentCourse.getDescription();
+            txtCourseDesc.setText(desc.equals(Course.EMPTY_COURSE_DESC_PLACEHOLDER) ? null : desc);
 
             builder.setView(dialogView)
                     .setTitle("Edit Course")
@@ -182,7 +191,7 @@ public class CourseActivity extends AppCompatActivity {
 
     private void addDefButton (final Definition def) {
         final Button btn = new Button(this);
-        btn.setText(def.getName() + ": " + def.getDescription());
+        btn.setText(def.getName() + " : " + def.getDescription());
         btn.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         btn.setOnClickListener(v -> {
             final Dialog coursePopup = new Dialog(CourseActivity.this);
@@ -195,7 +204,7 @@ public class CourseActivity extends AppCompatActivity {
             Button btnToggleIgnore = coursePopup.findViewById(R.id.btnToggleIgnore);
             Button btnToggleDifficult = coursePopup.findViewById(R.id.btnToggleDifficult);
             Button btnEdit = coursePopup.findViewById(R.id.btnEdit);
-            Button btnSave = coursePopup.findViewById(R.id.btnSave);
+            Button btnBack = coursePopup.findViewById(R.id.btnBack);
             Button btnReset = coursePopup.findViewById(R.id.btnReset);
             Button btnDelete = coursePopup.findViewById(R.id.btnDelete);
 
@@ -246,28 +255,39 @@ public class CourseActivity extends AppCompatActivity {
                         .setPositiveButton(R.string.save, (dialogInterface, i) -> {
                             // Add new def
                             String name = txtDefName.getText().toString().trim();
+                            String des = txtDefDesc.getText().toString().trim();
+                            String level = txtDefLevel.getText().toString().trim();
+
                             if (name.isEmpty()) {
                                 Toast.makeText(CourseActivity.this, "Definition name cannot be empty", Toast.LENGTH_SHORT).show();
                                 return;
-                            } else if (!def.getName().equals(name) && _currentCourse.containsDefinition(name)) {
+                            }
+                            else if (name.contains(Course.DELIMITER) ||
+                                    des.contains(Course.DELIMITER) ||
+                                    level.contains(Course.DELIMITER)) {
+                                Toast.makeText(CourseActivity.this, "Definition contains illegal characters", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            else if (!def.getName().equals(name) && _currentCourse.containsDefinition(name)) {
                                 Toast.makeText(CourseActivity.this, "Another definition with this name already exists", Toast.LENGTH_SHORT).show();
                                 return;
                             }
 
                             def.setName(name);
-                            def.setDescription(txtDefDesc.getText().toString());
-                            def.setLevel(txtDefLevel.getText().toString());
+                            def.setDescription(des);
+                            def.setLevel(level);
 
                             updateReviewButton();
                             updateContent(defText, def.toString());
-                            btn.setText(def.getName() + ": " + def.getDescription());
+                            btn.setText(def.getName() + " : " + def.getDescription());
                         })
                         .setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.dismiss());
                 AlertDialog dialog = builder.create();
                 dialog.show();
             });
 
-            btnSave.setOnClickListener(view -> coursePopup.dismiss());
+            btnBack.setOnClickListener(view -> coursePopup.dismiss());
 
             btnReset.setOnClickListener(view -> UIManager.createConfirmationPopup(CourseActivity.this, "Reset Definition",
                     String.format("Reset all data for \"%1$s\" ?", def.getName()), R.drawable.brain,
