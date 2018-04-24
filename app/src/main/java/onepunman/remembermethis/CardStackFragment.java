@@ -1,13 +1,20 @@
 package onepunman.remembermethis;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
+import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.TextView;
+import android.widget.ViewAnimator;
 
 import com.tekle.oss.android.animation.*;
 
@@ -17,37 +24,45 @@ public class CardStackFragment extends Fragment {
     private boolean _isPractice;
 
     private ReviewActivity parentActivity;
-    private TextView mTxtName;
-    private TextView mTxtDesc;
+    private ViewAnimator mViewAnimator;
+
+    //private TextView mTxtName;
+    //private TextView mTxtDesc;
 
     private CardFragmentFront _cardFront;
     private CardFragmentBack _cardBack;
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.card_item_front, null);
+        View v = inflater.inflate(R.layout.card_item, null);
+
+       mViewAnimator = v.findViewById(R.id.viewAnimator);
+       parentActivity = (ReviewActivity) getActivity();
 
         _cardFront = new CardFragmentFront();
         _cardBack = new CardFragmentBack();
 
+        _cardFront.setInfo(_definition);
+        _cardBack.setInfo(_definition);
 
-        // Init data here
-        mTxtName = v.findViewById(R.id.cardTitle);
-        mTxtDesc = v.findViewById(R.id.cardDescription);
+        FragmentManager fm = getChildFragmentManager();
+        FragmentTransaction fs = fm.beginTransaction();
 
-        mTxtName.setText(_definition.getName());
-        mTxtDesc.setText(null);
+        fs.add(mViewAnimator.getId(), _cardFront, "cardFront");
+        fs.add(mViewAnimator.getId(), _cardBack, "cardBack");
 
-        parentActivity = (ReviewActivity) getActivity();
-
+        fs.commit();
 
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (_definition != null)
                 {
-                    mTxtDesc.setText(_definition.getDescription());
+                    // Flip card
+                    //mTxtDesc.setText(_definition.getDescription());
+                    AnimationFactory.flipTransition(mViewAnimator, AnimationFactory.FlipDirection.LEFT_RIGHT);
                 }
             }
         });
@@ -55,7 +70,9 @@ public class CardStackFragment extends Fragment {
         v.setOnTouchListener(new OnSwipeTouchListener(parentActivity) {
             @Override
             public void onSwipeRight() {
-                AnimationFactory.fadeOut(v);
+                Animation a = AnimationFactory.outToRightAnimation(500, null);
+                v.startAnimation(a);
+
                 if (!_isPractice) _definition.updateReviewed(true, true);
                 parentActivity.makeToast("Nice!");
                 parentActivity.removeCard(CardStackFragment.this, _definition);
@@ -63,7 +80,9 @@ public class CardStackFragment extends Fragment {
 
             @Override
             public void onSwipeLeft() {
-                AnimationFactory.fadeOut(v);
+                Animation a = AnimationFactory.outToLeftAnimation(500, null);
+                v.startAnimation(a);
+
                 if (!_isPractice) _definition.updateReviewed(false, true);
                 parentActivity.makeToast("You'll get it next time!");
                 parentActivity.removeCard(CardStackFragment.this, _definition);
@@ -71,14 +90,18 @@ public class CardStackFragment extends Fragment {
 
             @Override
             public void onSwipeTop() {
-                AnimationFactory.fadeOut(v);
+                Animation a = AnimationFactory.outToTopAnimation(500, null);
+                v.startAnimation(a);
+
                 parentActivity.makeToast("Come back later");
                 parentActivity.putAtEnd(CardStackFragment.this, _definition);
             }
 
             @Override
             public void onSwipeBottom() {
-                AnimationFactory.fadeOut(v);
+                Animation a = AnimationFactory.outToBottomAnimation(500, null);
+                v.startAnimation(a);
+
                 parentActivity.makeToast("Skipped");
                 parentActivity.removeCard(CardStackFragment.this, _definition);
             }
@@ -87,7 +110,29 @@ public class CardStackFragment extends Fragment {
         return v;
     }
 
+    /*
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        _cardFront = new CardFragmentFront();
+        _cardBack = new CardFragmentBack();
+
+        _cardFront.setInfo(_definition);
+        _cardBack.setInfo(_definition);
+
+        FragmentManager fm = getChildFragmentManager();
+        FragmentTransaction fs = fm.beginTransaction();
+
+        fs.add(mViewAnimator.getId(), _cardFront, "cardFront");
+        fs.add(mViewAnimator.getId(), _cardBack, "cardBack");
+
+        fs.commit();
+    }
+    */
+
     public void setDefinition(Definition def, boolean advance) {
+        Log.e("Debug", "parent set def");
         _definition = def;
         _isPractice = advance;
     }

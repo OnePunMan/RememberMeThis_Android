@@ -11,14 +11,6 @@
         android:layout_width="300dp"
         android:layout_height="400dp"
         android:layout_centerInParent="true">
-
-        <!--
-        <fragment android:name="onepunman.remembermethis.CardStackFragment"
-            android:id="@+id/frag1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" /> -->
-
-
     </FrameLayout>
 
     <Button
@@ -38,7 +30,7 @@
         android:layout_centerHorizontal="true"
         android:gravity="center_vertical|center_horizontal"
         android:text="Remaining: 99"
-        android:textColor="#000000"
+        android:textColor="#ffffff"
         android:textSize="24sp" />
 
     <TextView
@@ -50,7 +42,7 @@
         android:layout_marginTop="44dp"
         android:gravity="center_vertical|center_horizontal"
         android:text="Time: 01:33"
-        android:textColor="#000000"
+        android:textColor="#ffffff"
         android:textSize="24sp" />
 
 </RelativeLayout>

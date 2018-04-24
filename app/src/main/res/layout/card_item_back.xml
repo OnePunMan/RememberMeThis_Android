@@ -6,10 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@drawable/card_front">
+    android:background="@drawable/card_back">
 
     <TextView
-        android:id="@+id/cardTitle"
+        android:id="@+id/cardTitleBack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -21,11 +21,11 @@
         android:textSize="24sp" />
 
     <TextView
-        android:id="@+id/cardDescription"
+        android:id="@+id/cardDescriptionBack"
         android:layout_width="match_parent"
         android:layout_height="375dp"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/cardTitle"
+        android:layout_below="@+id/cardTitleBack"
         android:gravity="center_vertical|center_horizontal"
         android:text="Description"
         android:textColor="@color/black"

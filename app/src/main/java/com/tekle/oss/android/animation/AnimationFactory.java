@@ -302,7 +302,24 @@ public class AnimationFactory {
 		outtotop.setDuration(duration); 
 		outtotop.setInterpolator(interpolator==null?new AccelerateInterpolator():interpolator); 
 		return outtotop;
-	} 
+	}
+
+	/**
+	 * Slide animations to hide a view by sliding it to the top
+	 *
+	 * @param duration the animation duration in milliseconds
+	 * @param interpolator the interpolator to use (pass {@code null} to use the {@link AccelerateInterpolator} interpolator)
+	 * @return a slide transition animation
+	 */
+	public static Animation outToBottomAnimation(long duration, Interpolator interpolator) {
+		Animation outToBottom = new TranslateAnimation(
+				Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,  0.0f,
+				Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT, +1.0f
+		);
+		outToBottom.setDuration(duration);
+		outToBottom.setInterpolator(interpolator==null?new AccelerateInterpolator():interpolator);
+		return outToBottom;
+	}
 
 	/**
 	 * A fade animation that will fade the subject in by changing alpha from 0 to 1.

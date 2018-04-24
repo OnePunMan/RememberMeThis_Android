@@ -5,10 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@drawable/card_front"
-    android:clickable="true">
+    android:background="@drawable/layout_bg"
+    android:clickable="true"
+    android:id="@+id/viewAnimator"
+    android:focusable="true">
 
+    <!--
     <fragment
+        android:id="@+id/cardFrontFragment"
         android:name="onepunman.remembermethis.CardFragmentFront"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,10 +20,11 @@
     </fragment>
 
     <fragment
+        android:id="@+id/cardBackFragment"
         android:name="onepunman.remembermethis.CardFragmentBack"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/card_item_back">
-    </fragment>
+    </fragment> -->
 
 </ViewFlipper>
