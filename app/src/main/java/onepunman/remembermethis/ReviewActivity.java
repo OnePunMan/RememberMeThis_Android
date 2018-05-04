@@ -22,6 +22,7 @@ public class ReviewActivity extends FragmentActivity {
 
     private FrameLayout mCardFrame;
     private TextView mTxtCounter;
+    private TextView mTxtTime;
 
     private Course _course;
     private ArrayList<Definition> _reviewList;
@@ -53,10 +54,14 @@ public class ReviewActivity extends FragmentActivity {
             Log.e("Debug", "Failed to start review session");
         }
 
+
         _reviewAll = getIntent().getExtras().getBoolean("isAll");
 
         mCardFrame = findViewById(R.id.viewPager);
         mTxtCounter = findViewById(R.id.txtRemaining);
+        mTxtTime = findViewById(R.id.txtTimer);
+
+        mTxtTime.setText(String.format("Course: %s", _course.getName()));
 
         _reviewList = _reviewAll ? _course.getAll() : _course.getReviewList();
         Collections.shuffle(_reviewList);

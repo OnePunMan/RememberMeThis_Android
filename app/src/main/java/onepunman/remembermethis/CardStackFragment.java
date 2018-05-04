@@ -22,15 +22,16 @@ public class CardStackFragment extends Fragment {
     final String TAG = "Debug";
     private Definition _definition;
     private boolean _isPractice;
+    private boolean _isShown;
 
     private ReviewActivity parentActivity;
-    private ViewAnimator mViewAnimator;
+    //private ViewAnimator mViewAnimator;
 
-    //private TextView mTxtName;
-    //private TextView mTxtDesc;
+    private TextView mTxtName;
+    private TextView mTxtDesc;
 
-    private CardFragmentFront _cardFront;
-    private CardFragmentBack _cardBack;
+    //private CardFragmentFront _cardFront;
+    //private CardFragmentBack _cardBack;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Nullable
@@ -38,9 +39,16 @@ public class CardStackFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.card_item, null);
 
-       mViewAnimator = v.findViewById(R.id.viewAnimator);
+       //mViewAnimator = v.findViewById(R.id.viewAnimator);
        parentActivity = (ReviewActivity) getActivity();
 
+       mTxtName = v.findViewById(R.id.cardTitle);
+       mTxtDesc = v.findViewById(R.id.cardDescription);
+
+       mTxtName.setText(_definition.getName());
+       mTxtDesc.setText(null);
+
+       /*
         _cardFront = new CardFragmentFront();
         _cardBack = new CardFragmentBack();
 
@@ -54,6 +62,7 @@ public class CardStackFragment extends Fragment {
         fs.add(mViewAnimator.getId(), _cardBack, "cardBack");
 
         fs.commit();
+        */
 
         v.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,8 +70,15 @@ public class CardStackFragment extends Fragment {
                 if (_definition != null)
                 {
                     // Flip card
-                    //mTxtDesc.setText(_definition.getDescription());
-                    AnimationFactory.flipTransition(mViewAnimator, AnimationFactory.FlipDirection.LEFT_RIGHT);
+                    mTxtDesc.setText(_definition.getDescription());
+                    //AnimationFactory.flipTransition(mViewAnimator, AnimationFactory.FlipDirection.LEFT_RIGHT);
+                    if (_isShown) {
+                        AnimationFactory.fadeOut(mTxtDesc);
+                    }
+                    else {
+                        AnimationFactory.fadeIn(mTxtDesc);
+                    }
+                    _isShown = !_isShown;
                 }
             }
         });
@@ -135,5 +151,6 @@ public class CardStackFragment extends Fragment {
         Log.e("Debug", "parent set def");
         _definition = def;
         _isPractice = advance;
+        _isShown = false;
     }
 }
