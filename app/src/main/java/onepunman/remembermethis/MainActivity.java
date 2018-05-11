@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         if (ContextCompat.checkSelfPermission(MainActivity.this,
-                Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
         {
             // Toast.makeText(MainActivity.this, "Permission Already Granted", Toast.LENGTH_SHORT).show();
             FileIO.initDirectory();
@@ -58,18 +58,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void requestStoragePermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE))
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE))
         {
             new AlertDialog.Builder(this)
                     .setTitle("Permission Needed")
                     .setMessage("You denied the permission last time, we need permission to save and load course files, grant?")
-                    .setPositiveButton("Ok", (dialogInterface, i) -> ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE))
+                    .setPositiveButton("Ok", (dialogInterface, i) -> ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE))
                     .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss())
                     .create()
                     .show();
         }
         else {
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
         }
         FileIO.initDirectory();
     }
